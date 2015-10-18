@@ -1,7 +1,7 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
-    /*
+    
     MusicianMachine* newMachinePiano = new MusicianMachine( "PIANO" );
     MusicianMachine* newMachineViola = new MusicianMachine( "VIOLA" );
     MusicianMachine* newMachineViolin01 = new MusicianMachine( "VIOLIN 01" );
@@ -14,7 +14,7 @@ void ofApp::setup(){
     newMachineViolin01->load("machines/MachinesJo_02/MachineViolin01.mmf");
     newMachineViolin02->load("machines/MachinesJo_02/MachineViolin02.mmf");
     newMachineViolin03->load("machines/MachinesJo_02/MachineViolin03.mmf");
-    newMachineViolonchelo->load("machines/MachinesJo_02/MachineVilonchelo.mmf");
+    newMachineViolonchelo->load("machines/MachinesJo_02/MachineViolonchelo.mmf");
  
     machines.push_back( newMachinePiano );
     machines.push_back( newMachineViola );
@@ -22,8 +22,8 @@ void ofApp::setup(){
     machines.push_back( newMachineViolin02 );
     machines.push_back( newMachineViolin03 );
     machines.push_back( newMachineViolonchelo );
-     */
-    createMachines();
+     
+    //createMachines();
 
     createEqualizer();
     createGUI();
@@ -175,36 +175,43 @@ void ofApp::createMachines(){
     MusicianMachine* newMachineViolonchelo  = new MusicianMachine( "VIOLINONCHELO" );
     
     //Machine Pianno
-    newMachinePiano->addState( "PIANO_SILENCE"  , "sounds/soundsJo_03/Luz_Piano_Part_Silence.mp3" , 0 );
+    newMachinePiano->addState( "PIANO_SILENCE"  , "sounds/soundsJo_03/Luz_Piano_Part_Silence.wav" , 0 );
     newMachinePiano->addState( "PIANO_01"       , "sounds/soundsJo_03/Luz_Piano_Part_01.mp3" , 0 );
     
-    newMachinePiano->addTransition("PIANO_SILENCE" , "PIANO_01" , 0.2 );
-    newMachinePiano->addTransition("PIANO_01" , "PIANO_SILENCE" , 0.8 );
+    newMachinePiano->addTransition("PIANO_SILENCE" , "PIANO_01"         , 0.5 );
+    newMachinePiano->addTransition("PIANO_SILENCE" , "PIANO_SILENCE"    , 0.5 );
+    
+    newMachinePiano->addTransition("PIANO_01" , "PIANO_SILENCE" , 0.2 );
+    newMachinePiano->addTransition("PIANO_01" , "PIANO_01" , 0.8 );
     
     //machine Viola
-    newMachineViola->addState( "VIOLA_SILENCE"  , "sounds/soundsJo_03/Luz_Viola_Part_Silence.mp3" , 0 );
+    newMachineViola->addState( "VIOLA_SILENCE"  , "sounds/soundsJo_03/Luz_Viola_Part_Silence.wav" , 0 );
     newMachineViola->addState( "VIOLA_01"       , "sounds/soundsJo_03/Luz_Viola_Part_01.mp3" , 0 );
     newMachineViola->addState( "VIOLA_02"       , "sounds/soundsJo_03/Luz_Viola_Part_02.mp3" , 0 );
     newMachineViola->addState( "VIOLA_03"       , "sounds/soundsJo_03/Luz_Viola_Part_03.mp3" , 0 );
 
-    newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_01"        , 0.6 );
+    newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_SILENCE"   , 0.2 );
+    newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_01"        , 0.4 );
     newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_02"        , 0.3 );
     newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_03"        , 0.1 );
     
-    newMachineViola->addTransition("VIOLA_01"       , "VIOLA_SILENCE"   , 0.4 );
-    newMachineViola->addTransition("VIOLA_01"       , "VIOLA_02"        , 0.3 );
-    newMachineViola->addTransition("VIOLA_01"       , "VIOLA_03"        , 0.3 );
+    newMachineViola->addTransition("VIOLA_01"       , "VIOLA_SILENCE"   , 0.2 );
+    newMachineViola->addTransition("VIOLA_01"       , "VIOLA_01"        , 0.2 );
+    newMachineViola->addTransition("VIOLA_01"       , "VIOLA_02"        , 0.4 );
+    newMachineViola->addTransition("VIOLA_01"       , "VIOLA_03"        , 0.2 );
     
-    newMachineViola->addTransition("VIOLA_02"       , "VIOLA_SILENCE"   , 0.2 );
-    newMachineViola->addTransition("VIOLA_02"       , "VIOLA_01"        , 0.4 );
+    newMachineViola->addTransition("VIOLA_02"       , "VIOLA_SILENCE"   , 0.1 );
+    newMachineViola->addTransition("VIOLA_02"       , "VIOLA_01"        , 0.1 );
+    newMachineViola->addTransition("VIOLA_02"       , "VIOLA_02"        , 0.4 );
     newMachineViola->addTransition("VIOLA_02"       , "VIOLA_03"        , 0.4 );
     
-    newMachineViola->addTransition("VIOLA_03"       , "VIOLA_SILENCE"   , 0.6 );
-    newMachineViola->addTransition("VIOLA_03"       , "VIOLA_01"        , 0.2 );
-    newMachineViola->addTransition("VIOLA_03"       , "VIOLA_02"        , 0.2 );
+    newMachineViola->addTransition("VIOLA_03"       , "VIOLA_SILENCE"   , 0.3 );
+    newMachineViola->addTransition("VIOLA_03"       , "VIOLA_01"        , 0.1 );
+    newMachineViola->addTransition("VIOLA_03"       , "VIOLA_02"        , 0.5 );
+    newMachineViola->addTransition("VIOLA_03"       , "VIOLA_03"        , 0.1 );
 
     //machine Violin 01
-    newMachineViolin01->addState( "VIOLIN_#1_SILENCE" , "sounds/soundsJo_03/Luz_Violin_01_Part_Silence.mp3" , 0 );
+    newMachineViolin01->addState( "VIOLIN_#1_SILENCE" , "sounds/soundsJo_03/Luz_Violin_01_Part_Silence.wav" , 0 );
     newMachineViolin01->addState( "VIOLIN_#1_01" , "sounds/soundsJo_03/Luz_Violin_01_Part_01.mp3" , 0 );
     newMachineViolin01->addState( "VIOLIN_#1_02" , "sounds/soundsJo_03/Luz_Violin_01_Part_02.mp3" , 0 );
     newMachineViolin01->addState( "VIOLIN_#1_03" , "sounds/soundsJo_03/Luz_Violin_01_Part_03.mp3" , 0 );
@@ -212,121 +219,138 @@ void ofApp::createMachines(){
     newMachineViolin01->addState( "VIOLIN_#1_05" , "sounds/soundsJo_03/Luz_Violin_01_Part_05.mp3" , 0 );
     newMachineViolin01->addState( "VIOLIN_#1_06" , "sounds/soundsJo_03/Luz_Violin_01_Part_06.mp3" , 0 );
     
-    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_01" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_02" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_03" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_04" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_05" , 0.1 );
-    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_06" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_SILENCE" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_01"      , 0.5 );
+    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_02"      , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_03"      , 0.05 );
+    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_04"      , 0.05 );
+    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_05"      , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_SILENCE" , "VIOLIN_#1_06"      , 0.1 );
     
-    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_SILENCE" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_02" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_03" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_04" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_05" , 0.1 );
-    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_06" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_SILENCE"  , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_01"       , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_02"       , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_03"       , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_04"       , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_05"       , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_01" , "VIOLIN_#1_06"       , 0.1 );
     
     newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_SILENCE" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_01" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_03" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_01" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_02" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_03" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_04" , 0.2 );
     newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_05" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_02" , "VIOLIN_#1_06" , 0.1 );
     
-    newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_SILENCE" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_SILENCE" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_01" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_02" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_04" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_02" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_03" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_04" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_05" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_03" , "VIOLIN_#1_06" , 0.1 );
     
-    newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_SILENCE" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_01" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_SILENCE" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_01" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_02" , 0.2 );
     newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_03" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_04" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_05" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_04" , "VIOLIN_#1_06" , 0.1 );
     
-    newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_SILENCE" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_01" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_SILENCE" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_01" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_02" , 0.2 );
     newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_03" , 0.2 );
     newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_04" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_05" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_05" , "VIOLIN_#1_06" , 0.1 );
     
-    newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_SILENCE" , 0.2 );
-    newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_01" , 0.2 );
+    newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_SILENCE" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_01" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_02" , 0.2 );
     newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_03" , 0.2 );
     newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_04" , 0.1 );
     newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_05" , 0.1 );
+    newMachineViolin01->addTransition("VIOLIN_#1_06" , "VIOLIN_#1_06" , 0.1 );
     
     //machine Violin 02
-    newMachineViolin02->addState( "VIOLIN_#2_SILENCE" , "sounds/soundsJo_03/Luz_Violin_02_Part_Silence.mp3" , 0 );
+    newMachineViolin02->addState( "VIOLIN_#2_SILENCE" , "sounds/soundsJo_03/Luz_Violin_02_Part_Silence.wav" , 0 );
     newMachineViolin02->addState( "VIOLIN_#2_01" , "sounds/soundsJo_03/Luz_Violin_03_Part_01.mp3" , 0 );
     newMachineViolin02->addState( "VIOLIN_#2_02" , "sounds/soundsJo_03/Luz_Violin_03_Part_02.mp3" , 0 );
     newMachineViolin02->addState( "VIOLIN_#2_03" , "sounds/soundsJo_03/Luz_Violin_03_Part_03.mp3" , 0 );
     newMachineViolin02->addState( "VIOLIN_#2_04" , "sounds/soundsJo_03/Luz_Violin_03_Part_04.mp3" , 0 );
     
-    newMachineViolin02->addTransition("VIOLIN_#2_SILENCE" , "VIOLIN_#2_01" , 0.4 );
+    newMachineViolin02->addTransition("VIOLIN_#2_SILENCE" , "VIOLIN_#2_SILENCE" , 0.1 );
+    newMachineViolin02->addTransition("VIOLIN_#2_SILENCE" , "VIOLIN_#2_01" , 0.3 );
     newMachineViolin02->addTransition("VIOLIN_#2_SILENCE" , "VIOLIN_#2_02" , 0.2 );
     newMachineViolin02->addTransition("VIOLIN_#2_SILENCE" , "VIOLIN_#2_03" , 0.2 );
     newMachineViolin02->addTransition("VIOLIN_#2_SILENCE" , "VIOLIN_#2_04" , 0.2 );
     
-    newMachineViolin02->addTransition("VIOLIN_#2_01" , "VIOLIN_#2_SILENCE" , 0.2 );
+    newMachineViolin02->addTransition("VIOLIN_#2_01" , "VIOLIN_#2_SILENCE" , 0.1 );
+    newMachineViolin02->addTransition("VIOLIN_#2_01" , "VIOLIN_#2_01" , 0.1 );
     newMachineViolin02->addTransition("VIOLIN_#2_01" , "VIOLIN_#2_02" , 0.3 );
     newMachineViolin02->addTransition("VIOLIN_#2_01" , "VIOLIN_#2_03" , 0.3 );
     newMachineViolin02->addTransition("VIOLIN_#2_01" , "VIOLIN_#2_04" , 0.2 );
     
     newMachineViolin02->addTransition("VIOLIN_#2_02" , "VIOLIN_#2_SILENCE" , 0.3 );
     newMachineViolin02->addTransition("VIOLIN_#2_02" , "VIOLIN_#2_01" , 0.2 );
+    newMachineViolin02->addTransition("VIOLIN_#2_02" , "VIOLIN_#2_02" , 0.2 );
     newMachineViolin02->addTransition("VIOLIN_#2_02" , "VIOLIN_#2_03" , 0.2 );
     newMachineViolin02->addTransition("VIOLIN_#2_02" , "VIOLIN_#2_04" , 0.3 );
     
     newMachineViolin02->addTransition("VIOLIN_#2_03" , "VIOLIN_#2_SILENCE" , 0.2 );
     newMachineViolin02->addTransition("VIOLIN_#2_03" , "VIOLIN_#2_01" , 0.2 );
     newMachineViolin02->addTransition("VIOLIN_#2_03" , "VIOLIN_#2_02" , 0.4 );
+    newMachineViolin02->addTransition("VIOLIN_#2_03" , "VIOLIN_#2_02" , 0.4 );
     newMachineViolin02->addTransition("VIOLIN_#2_03" , "VIOLIN_#2_04" , 0.2 );
     
     newMachineViolin02->addTransition("VIOLIN_#2_04" , "VIOLIN_#2_SILENCE" , 0.3 );
     newMachineViolin02->addTransition("VIOLIN_#2_04" , "VIOLIN_#2_01" , 0.2 );
     newMachineViolin02->addTransition("VIOLIN_#2_04" , "VIOLIN_#2_02" , 0.2 );
-    newMachineViolin02->addTransition("VIOLIN_#2_04" , "VIOLIN_#2_03" , 0.3 );
+    newMachineViolin02->addTransition("VIOLIN_#2_04" , "VIOLIN_#2_03" , 0.1 );
+    newMachineViolin02->addTransition("VIOLIN_#2_04" , "VIOLIN_#2_04" , 0.2 );
     
     //machine Violin 03
-    newMachineViolin03->addState( "VIOLIN_#3_SILENCE" , "sounds/soundsJo_03/Luz_Violin_01_Part_Silence.mp3" , 0 );
+    newMachineViolin03->addState( "VIOLIN_#3_SILENCE" , "sounds/soundsJo_03/Luz_Violin_01_Part_Silence.wav" , 0 );
     newMachineViolin03->addState( "VIOLIN_#3_01" , "sounds/soundsJo_03/Luz_Violin_01_Part_01.mp3" , 0 );
     newMachineViolin03->addState( "VIOLIN_#3_02" , "sounds/soundsJo_03/Luz_Violin_01_Part_02.mp3" , 0 );
     newMachineViolin03->addState( "VIOLIN_#3_03" , "sounds/soundsJo_03/Luz_Violin_01_Part_03.mp3" , 0 );
     newMachineViolin03->addState( "VIOLIN_#3_04" , "sounds/soundsJo_03/Luz_Violin_01_Part_04.mp3" , 0 );
     
+    newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_SILENCE" , 0.1 );
     newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_01" , 0.4 );
     newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_02" , 0.2 );
     newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_03" , 0.2 );
-    newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_04" , 0.2 );
+    newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_04" , 0.1 );
 
-    newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_SILENCE" , 0.2 );
-    newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_02" , 0.2 );
-    newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_03" , 0.4 );
+    newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_SILENCE" , 0.1 );
+    newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_01" , 0.2 );
+    newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_02" , 0.4 );
+    newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_03" , 0.2 );
     newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_04" , 0.2 );
     
-    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_SILENCE" , 0.3 );
-    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_01" , 0.2 );
-    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_03" , 0.2 );
-    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_04" , 0.3 );
+    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_SILENCE" , 0.1 );
+    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_01" , 0.1 );
+    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_02" , 0.2 );
+    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_03" , 0.4 );
+    newMachineViolin03->addTransition("VIOLIN_#3_02" , "VIOLIN_#3_04" , 0.2 );
     
-    newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_SILENCE" , 0.2 );
-    newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_01" , 0.3 );
+    newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_SILENCE" , 0.1 );
+    newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_01" , 0.2 );
     newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_02" , 0.3 );
-    newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_04" , 0.2 );
+    newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_03" , 0.1 );
+    newMachineViolin03->addTransition("VIOLIN_#3_03" , "VIOLIN_#3_04" , 0.3 );
     
-    newMachineViolin03->addTransition("VIOLIN_#3_04" , "VIOLIN_#3_SILENCE" , 0.2 );
-    newMachineViolin03->addTransition("VIOLIN_#3_04" , "VIOLIN_#3_01" , 0.2 );
+    newMachineViolin03->addTransition("VIOLIN_#3_04" , "VIOLIN_#3_SILENCE" , 0.1 );
+    newMachineViolin03->addTransition("VIOLIN_#3_04" , "VIOLIN_#3_01" , 0.1 );
     newMachineViolin03->addTransition("VIOLIN_#3_04" , "VIOLIN_#3_02" , 0.2 );
     newMachineViolin03->addTransition("VIOLIN_#3_04" , "VIOLIN_#3_03" , 0.4 );
+    newMachineViolin03->addTransition("VIOLIN_#3_04" , "VIOLIN_#3_04" , 0.2 );
     
     //machine Violonchelo
-    newMachineViolonchelo->addState( "VIOLONCHELO_SILENCE" , "sounds/soundsJo_03/Luz_Violonchelo_Part_Silence.mp3" , 0 );
+    newMachineViolonchelo->addState( "VIOLONCHELO_SILENCE" , "sounds/soundsJo_03/Luz_Violonchelo_Part_Silence.wav" , 0 );
     newMachineViolonchelo->addState( "VIOLONCHELO_01" , "sounds/soundsJo_03/Luz_Violonchelo_Part_01.mp3" , 0 );
     newMachineViolonchelo->addState( "VIOLONCHELO_02" , "sounds/soundsJo_03/Luz_Violonchelo_Part_02.mp3" , 0 );
     newMachineViolonchelo->addState( "VIOLONCHELO_03" , "sounds/soundsJo_03/Luz_Violonchelo_Part_03.mp3" , 0 );
@@ -334,6 +358,7 @@ void ofApp::createMachines(){
     newMachineViolonchelo->addState( "VIOLONCHELO_05" , "sounds/soundsJo_03/Luz_Violonchelo_Part_05.mp3" , 0 );
     newMachineViolonchelo->addState( "VIOLONCHELO_06" , "sounds/soundsJo_03/Luz_Violonchelo_Part_06.mp3" , 0 );
     
+    newMachineViolonchelo->addTransition("VIOLONCHELO_SILENCE" , "VIOLONCHELO_SILENCE" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_SILENCE" , "VIOLONCHELO_01" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_SILENCE" , "VIOLONCHELO_02" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_SILENCE" , "VIOLONCHELO_03" , 0.2 );
@@ -342,38 +367,43 @@ void ofApp::createMachines(){
     newMachineViolonchelo->addTransition("VIOLONCHELO_SILENCE" , "VIOLONCHELO_06" , 0.1 );
     
     newMachineViolonchelo->addTransition("VIOLONCHELO_01" , "VIOLONCHELO_SILENCE" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_01" , "VIOLONCHELO_01" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_01" , "VIOLONCHELO_02" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_01" , "VIOLONCHELO_03" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_01" , "VIOLONCHELO_04" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_01" , "VIOLONCHELO_05" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_01" , "VIOLONCHELO_06" , 0.1 );
     
-    newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_SILENCE" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_SILENCE" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_01" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_02" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_03" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_04" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_05" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_02" , "VIOLONCHELO_06" , 0.1 );
     
-    newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_SILENCE" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_SILENCE" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_01" , 0.2 );
-    newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_02" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_02" , 0.1 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_03" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_04" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_05" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_03" , "VIOLONCHELO_06" , 0.1 );
     
-    newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_SILENCE" , 0.2 );
-    newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_01" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_SILENCE" , 0.1 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_01" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_02" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_03" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_04" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_05" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_04" , "VIOLONCHELO_06" , 0.1 );
     
-    newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_SILENCE" , 0.2 );
-    newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_01" , 0.2 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_SILENCE" , 0.1 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_01" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_02" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_03" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_04" , 0.1 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_05" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_05" , "VIOLONCHELO_06" , 0.1 );
     
     newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_SILENCE" , 0.2 );
@@ -382,13 +412,14 @@ void ofApp::createMachines(){
     newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_03" , 0.2 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_04" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_05" , 0.1 );
+    newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_06" , 0.1 );
 
-    newMachinePiano->save( "machines/MachinesTest/MachinePiano.mmf");
-    newMachineViola->save( "machines/MachinesTest/MachineViola.mmf");
-    newMachineViolin01->save( "machines/MachinesTest/MachineViolin01.mmf");
-    newMachineViolin02->save( "machines/MachinesTest/MachineViolin02.mmf");
-    newMachineViolin03->save( "machines/MachinesTest/MachineViolin03.mmf");
-    newMachineViolonchelo->save( "machines/MachinesTest/MachineViolonchelo.mmf");
+    newMachinePiano->save( "machines/MachinesJo_02/MachinePiano.mmf");
+    newMachineViola->save( "machines/MachinesJo_02/MachineViola.mmf");
+    newMachineViolin01->save( "machines/MachinesJo_02/MachineViolin01.mmf");
+    newMachineViolin02->save( "machines/MachinesJo_02/MachineViolin02.mmf");
+    newMachineViolin03->save( "machines/MachinesJo_02/MachineViolin03.mmf");
+    newMachineViolonchelo->save( "machines/MachinesJo_02/MachineViolonchelo.mmf");
 
     machines.push_back( newMachinePiano         );
     machines.push_back( newMachineViola         );

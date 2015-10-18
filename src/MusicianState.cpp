@@ -21,6 +21,7 @@ MusicianState::MusicianState( string theStatetNane , string theSoundFileName , f
     param01 = param01Value;
     sound.stop();
     sound.setLoop(false);
+    sound.setMultiPlay(true);
 }
 //----------------------------------------------------------------------------------
 string MusicianState::getName(){
