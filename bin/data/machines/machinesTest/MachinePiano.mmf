@@ -1,0 +1,14 @@
+numStates= 2
+numTransitions= 2
+name= PIANO_SILENCE
+soundFileName= sounds/soundsJo_03/Luz_Piano_Part_Silence.mp3
+param01= 0
+name= PIANO_01
+soundFileName= sounds/soundsJo_03/Luz_Piano_Part_01.mp3
+param01= 0
+stateNameInitial= PIANO_SILENCE
+stateNameFinal= PIANO_01
+probability= 0.2
+stateNameInitial= PIANO_01
+stateNameFinal= PIANO_SILENCE
+probability= 0.8
