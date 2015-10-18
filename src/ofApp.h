@@ -41,5 +41,6 @@ public:
     //machines
     std::vector<MusicianMachine*> machines;
     void createMachines();
+    void createMachinesTest();
 };
 
