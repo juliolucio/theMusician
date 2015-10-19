@@ -3,25 +3,25 @@
 void ofApp::setup(){
     
     MusicianMachine* newMachinePiano = new MusicianMachine( "PIANO" );
-    MusicianMachine* newMachineViola = new MusicianMachine( "VIOLA" );
-    MusicianMachine* newMachineViolin01 = new MusicianMachine( "VIOLIN 01" );
-    MusicianMachine* newMachineViolin02 = new MusicianMachine( "VIOLIN 02" );
-    MusicianMachine* newMachineViolin03 = new MusicianMachine( "VIOLIN 03" );
-    MusicianMachine* newMachineViolonchelo = new MusicianMachine( "VIOLINONCHELO" );
+   // MusicianMachine* newMachineViola = new MusicianMachine( "VIOLA" );
+  //  MusicianMachine* newMachineViolin01 = new MusicianMachine( "VIOLIN 01" );
+  //  MusicianMachine* newMachineViolin02 = new MusicianMachine( "VIOLIN 02" );
+  //  MusicianMachine* newMachineViolin03 = new MusicianMachine( "VIOLIN 03" );
+  //  MusicianMachine* newMachineViolonchelo = new MusicianMachine( "VIOLINONCHELO" );
     
     newMachinePiano->load("machines/MachinesJo_02/MachinePiano.mmf");
-    newMachineViola->load("machines/MachinesJo_02/MachineViola.mmf");
-    newMachineViolin01->load("machines/MachinesJo_02/MachineViolin01.mmf");
-    newMachineViolin02->load("machines/MachinesJo_02/MachineViolin02.mmf");
-    newMachineViolin03->load("machines/MachinesJo_02/MachineViolin03.mmf");
-    newMachineViolonchelo->load("machines/MachinesJo_02/MachineViolonchelo.mmf");
+    //newMachineViola->load("machines/MachinesJo_02/MachineViola.mmf");
+    //newMachineViolin01->load("machines/MachinesJo_02/MachineViolin01.mmf");
+    //newMachineViolin02->load("machines/MachinesJo_02/MachineViolin02.mmf");
+    //newMachineViolin03->load("machines/MachinesJo_02/MachineViolin03.mmf");
+    //newMachineViolonchelo->load("machines/MachinesJo_02/MachineViolonchelo.mmf");
  
     machines.push_back( newMachinePiano );
-    machines.push_back( newMachineViola );
-    machines.push_back( newMachineViolin01 );
-    machines.push_back( newMachineViolin02 );
-    machines.push_back( newMachineViolin03 );
-    machines.push_back( newMachineViolonchelo );
+    //machines.push_back( newMachineViola );
+    //machines.push_back( newMachineViolin01 );
+    //machines.push_back( newMachineViolin02 );
+    //machines.push_back( newMachineViolin03 );
+   // machines.push_back( newMachineViolonchelo );
      
     //createMachines();
 
