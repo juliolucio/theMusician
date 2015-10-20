@@ -101,7 +101,6 @@ string MusicianMachine::update(){
                     currentState->sound.setVolume(1);
                 else
                     currentState->sound.setVolume(0);
-                    
                 return;
             }
         }
