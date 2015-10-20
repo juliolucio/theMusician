@@ -1,7 +1,6 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
     MusicianMachine* newMachinePiano = new MusicianMachine( "PIANO" );
     MusicianMachine* newMachineViola = new MusicianMachine( "VIOLA" );
     MusicianMachine* newMachineViolin01 = new MusicianMachine( "VIOLIN 01" );
@@ -35,12 +34,14 @@ void ofApp::setup(){
 void ofApp::update(){
     ofBackground(127,127,127);
     updateEqualizer();
-      for( int m = 0 ; m < machines.size() ; m++)
-        machines[m]->update();
+    for( int m = 0 ; m < machines.size() ; m++)
+        if(machines[m])
+            machines[m]->update();
+    
 }
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    ofHideCursor();
     ofSetColor(255,255,255,255);
     ofPoint equalizerSize = ofPoint( 400 , 70 );
     
@@ -50,7 +51,7 @@ void ofApp::draw(){
 }
 //--------------------------------------------------------------
 void ofApp::createGUI(){
-    cursor.loadImage("GUI/cursor.png");
+    cursor.loadImage("GUI/cursor_baton.png");
     GUIFirstCirclePosition = ofPoint( ofGetWidth() / ( 2 * machines.size() ) , ofGetHeight() / 2);
     GUICircleSpacing = 2 * GUIFirstCirclePosition.x;
     GUICircleRadius = ( GUICircleSpacing- .1 * GUICircleSpacing ) / 2;
@@ -101,8 +102,7 @@ void ofApp::mouseReleasedGUI( int x , int y , int buton ){
 void ofApp::drawGUIMouse(){
     ofPoint position = ofPoint( ofGetMouseX() , ofGetMouseY());
     ofEnableAlphaBlending();
-    
-    cursor.draw(position, 20 , 20 );
+    cursor.draw(position, 80 , 80 );
     ofDisableAlphaBlending();
 }
 //--------------------------------------------------------------
