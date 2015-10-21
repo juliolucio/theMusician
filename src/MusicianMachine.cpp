@@ -17,6 +17,7 @@ MusicianMachine::MusicianMachine( string theName ){
     fileIn = 0;
     fileOut = 0;
     isItActive = true;
+    hasJustChangedState = false;
 }
 //-------------------------------------------------------------
 MusicianMachine::~MusicianMachine(){
@@ -60,7 +61,7 @@ bool MusicianMachine::addTransition( string nameState01 , string nameState02 , f
     return true;
 }
 //-------------------------------------------------------------
-string MusicianMachine::update(){
+void MusicianMachine::update(){
     if( !currentState->sound.getIsPlaying() ){
         float dice = ofRandom( 0 , 1 );
         map<float,MusicianTransition*> posibleTransitions;
@@ -97,6 +98,7 @@ string MusicianMachine::update(){
                 currentState = tempPosibleTransition.second->getStateFinal();
                 cout << " to " << currentState->getName() << "\n";
                 currentState->sound.play();
+                hasJustChangedState = true;
                 if( isAtcive() )
                     currentState->sound.setVolume(1);
                 else
@@ -264,5 +266,12 @@ void MusicianMachine::setActive( bool ifIsItActive ){
 //-----------------------------------------------------------
 bool MusicianMachine::isAtcive(){
     return  isItActive;
-    
+}
+//-----------------------------------------------------------
+bool MusicianMachine::justChangedState(){
+    if( hasJustChangedState ){
+        hasJustChangedState = false;
+        return true;
+    }
+    return false;
 }

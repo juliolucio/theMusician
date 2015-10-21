@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "MusicianMachine.h"
+#include "MusicianMachineController.h"
 
 
 class ofApp : public ofBaseApp{
@@ -27,7 +28,8 @@ public:
     int GUICircleSpacing;
     ofImage cursor;
     void createGUI();
-    void drawGUI();
+    void drawGUI( ofPoint GUIFirstCirclePosition ,int GUICircleRadius,
+                 int GUICircleSpacing);
     void mouseReleasedGUI( int x , int y , int buton );
     void drawGUIMouse();
     
@@ -40,7 +42,19 @@ public:
     
     //machines
     std::vector<MusicianMachine*> machines;
+    std::vector<MusicianMachineController*> machinesControllers;
+    
     void createMachines();
     void createMachinesTest();
+    
+    ofImage texture;
+    ofVideoGrabber vidGrabber;
+    ofMaterial material;
+    ofLight pointLight;
+    ofLight pointLight2;
+    ofLight pointLight3;
+    void drawInteractionArea();
+    bool bShowHelp;
+    ofEasyCam cam;
 };
 

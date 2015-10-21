@@ -1,6 +1,39 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    ofSetVerticalSync(true);
+    ofBackground(20);
+    
+    // GL_REPEAT for texture wrap only works with NON-ARB textures //
+    ofDisableArbTex();
+    texture.loadImage("of.png");
+    texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
+       if( 0 ) {
+    vidGrabber.initGrabber(640, 480, true);
+       }
+    
+    ofSetSmoothLighting(true);
+    pointLight.setDiffuseColor( ofFloatColor(.85, .85, .55) );
+    pointLight.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
+    
+    pointLight2.setDiffuseColor( ofFloatColor( 238.f/255.f, 57.f/255.f, 135.f/255.f ));
+    pointLight2.setSpecularColor(ofFloatColor(.8f, .8f, .9f));
+    
+    pointLight3.setDiffuseColor( ofFloatColor(19.f/255.f,94.f/255.f,77.f/255.f) );
+    pointLight3.setSpecularColor( ofFloatColor(18.f/255.f,150.f/255.f,135.f/255.f) );
+    
+    // shininess is a value between 0 - 128, 128 being the most shiny //
+    material.setShininess( 120 );
+    // the light highlight of the material //
+    material.setSpecularColor(ofColor(255, 255, 255, 255));
+    
+    // this sets the camera's distance from the object
+    cam.setDistance(1000);
+    
+    ofSetCircleResolution(64);
+    ofSetSphereResolution(24);
+    
     MusicianMachine* newMachinePiano = new MusicianMachine( "PIANO" );
     MusicianMachine* newMachineViola = new MusicianMachine( "VIOLA" );
     MusicianMachine* newMachineViolin01 = new MusicianMachine( "VIOLIN 01" );
@@ -14,7 +47,7 @@ void ofApp::setup(){
     newMachineViolin02->load("machines/MachinesJo_02/MachineViolin02.mmf");
     newMachineViolin03->load("machines/MachinesJo_02/MachineViolin03.mmf");
     newMachineViolonchelo->load("machines/MachinesJo_02/MachineViolonchelo.mmf");
- 
+    
     machines.push_back( newMachinePiano );
     machines.push_back( newMachineViola );
     machines.push_back( newMachineViolin01 );
@@ -22,21 +55,55 @@ void ofApp::setup(){
     machines.push_back( newMachineViolin03 );
     machines.push_back( newMachineViolonchelo );
     
+    MusicianMachineController* newMAchineControllerPiano = new MusicianMachineController( newMachinePiano , "machines/MachinesJo_02/MachinePiano.mmf" );
+    MusicianMachineController* newMAchineControllerViola = new MusicianMachineController( newMachineViola , "machines/MachinesJo_02/MachineViola.mmf" );
+    MusicianMachineController* newMAchineControllerViolin01 = new MusicianMachineController( newMachineViolin01 , "machines/MachinesJo_02/MachineViolin01.mmf" );
+    MusicianMachineController* newMAchineControllerViolin02 = new MusicianMachineController( newMachineViolin02 , "machines/MachinesJo_02/MachineViolin02.mmf" );
+    MusicianMachineController* newMAchineControllerViolin03 = new MusicianMachineController( newMachineViolin03 , "machines/MachinesJo_02/MachineViolin03.mmf" );
+    MusicianMachineController* newMAchineControllerViolonchelo = new MusicianMachineController( newMachineViolonchelo , "machines/MachinesJo_02/MachineViolonchelo.mmf" );
+    
+    machinesControllers.push_back( newMAchineControllerPiano   );
+    machinesControllers.push_back( newMAchineControllerViola );
+    machinesControllers.push_back( newMAchineControllerViolin01 );
+    machinesControllers.push_back( newMAchineControllerViolin02 );
+    machinesControllers.push_back( newMAchineControllerViolin03 );
+    machinesControllers.push_back( newMAchineControllerViolonchelo );
+    
     //createMachines();
-
     createEqualizer();
     createGUI();
     
-    for( int m = 0 ; m < machines.size() ; m++)
+    for( int m = 0 ; m < machines.size() ; m++){
         machines[m]->start();
+    }
 }
 //--------------------------------------------------------------
 void ofApp::update(){
     ofBackground(127,127,127);
     updateEqualizer();
+    
+    
     for( int m = 0 ; m < machines.size() ; m++)
         if(machines[m])
             machines[m]->update();
+    for( int m = 0 ; m < machinesControllers.size() ; m++)
+        if(machinesControllers[m])
+            machinesControllers[m]->update();
+    
+    pointLight.setPosition((ofGetWidth()*.5)+ cos(ofGetElapsedTimef()*.5)*(ofGetWidth()*.3), ofGetHeight()/2, 500);
+    pointLight2.setPosition((ofGetWidth()*.5)+ cos(ofGetElapsedTimef()*.15)*(ofGetWidth()*.3),
+                            ofGetHeight()*.5 + sin(ofGetElapsedTimef()*.7)*(ofGetHeight()), -300);
+    
+    pointLight3.setPosition(
+                            cos(ofGetElapsedTimef()*1.5) * ofGetWidth()*.5,
+                            sin(ofGetElapsedTimef()*1.5f) * ofGetWidth()*.5,
+                            cos(ofGetElapsedTimef()*.2) * ofGetWidth()
+                            );
+    
+    //ofSetWindowTitle("Framerate: "+ofToString(ofGetFrameRate(), 0));
+    if( 0 ) {
+        vidGrabber.update();
+    }
     
 }
 //--------------------------------------------------------------
@@ -44,20 +111,131 @@ void ofApp::draw(){
     ofHideCursor();
     ofSetColor(255,255,255,255);
     ofPoint equalizerSize = ofPoint( 400 , 70 );
+    cam.begin();
     
-    drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , 4*( ofGetHeight() / 5 )  , equalizerSize.x , equalizerSize.y );
-    drawGUI();
+    
+    ofEnableDepthTest();
+    
+    ofEnableLighting();
+    pointLight.enable();
+    pointLight2.enable();
+    pointLight3.enable();
+    
+    
+    //ofRotateX(ofRadToDeg(.5));
+    //ofRotateY(ofRadToDeg(-.5));
+    
+    
+    ofBackground(127);
+    /*
+    ofSetColor(255,0,0);
+    // ofFill();
+    //ofDrawBox(30);
+    ofNoFill();
+    //ofSetColor(0);
+    ofDrawBox(30);
+    
+    ofPushMatrix();
+    ofTranslate(0,0,20);
+    ofSetColor(0,0,255);
+    //ofFill();
+    //ofDrawBox(5);
+    ofNoFill();
+    //ofSetColor(0);
+    ofDrawBox(5);
+    ofSetColor(255);
+    ofPopMatrix();
+    */
+    
+    material.begin();
+    
+    if(1) texture.getTextureReference().bind();
+    if(0) vidGrabber.getTextureReference().bind();
+    
+    for( int m = 0 ; m < machinesControllers.size() ; m++){
+        if(machinesControllers[m]){
+            ofPushMatrix();
+            ofTranslate( (m * 200) - 520 , -200 );
+            machinesControllers[m]->drawView();
+            ofPopMatrix();
+        }
+    }
+    
+    if(1) texture.getTextureReference().unbind();
+    if(0) vidGrabber.getTextureReference().unbind();
+    
+    material.end();
+    ofDisableLighting();
+    
+    
+//    ofFill();
+////    ofSetColor(pointLight.getDiffuseColor());
+//    pointLight.draw();
+//    ofSetColor(pointLight2.getDiffuseColor());
+//    pointLight2.draw();
+//    ofSetColor(pointLight3.getDiffuseColor());
+//    pointLight3.draw();
+    
+    
+    ofDisableDepthTest();
+    
+    ofFill();
+    cam.end();
+    
+    drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , ( ofGetHeight() / 5 )  , equalizerSize.x , equalizerSize.y );
+    drawGUI( ofPoint( 165 , 600 ) , 30 , 135 );
+    //drawInteractionArea();
+//    ofSetColor(255);
+//    string msg = string("Using mouse inputs to navigate (press 'c' to toggle): ") + (cam.getMouseInputEnabled() ? "YES" : "NO");
+//    msg += string("\nShowing help (press 'h' to toggle): ")+ (bShowHelp ? "YES" : "NO");
+//    if (bShowHelp) {
+//        msg += "\n\nLEFT MOUSE BUTTON DRAG:\nStart dragging INSIDE the yellow circle -> camera XY rotation .\nStart dragging OUTSIDE the yellow circle -> camera Z rotation (roll).\n\n";
+//        msg += "LEFT MOUSE BUTTON DRAG + TRANSLATION KEY (" + ofToString(cam.getTranslationKey()) + ") PRESSED\n";
+//        msg += "OR MIDDLE MOUSE BUTTON (if available):\n";
+//        msg += "move over XY axes (truck and boom).\n\n";
+//        msg += "RIGHT MOUSE BUTTON:\n";
+//        msg += "move over Z axis (dolly)";
+//    }
+//    msg += "\n\nfps: " + ofToString(ofGetFrameRate(), 2);
+//    ofDrawBitmapStringHighlight(msg, 10, 20);
+    
+    
+    //       ofSetColor(0);
+    //    ofRect(icoSphere.getPosition().x-154, icoSphere.getPosition().y + 120, 168, 24);
+    //    ofSetColor(255);
+    //    ofDrawBitmapString("ofIcoSpherePrimitive", icoSphere.getPosition().x-150, icoSphere.getPosition().y+136 );
     drawGUIMouse();
+    
+    
+    
 }
+//--------------------------------------------------------------
+void ofApp::drawInteractionArea(){
+    ofRectangle vp = ofGetCurrentViewport();
+    float r = MIN(vp.width, vp.height) * 0.5f;
+    float x = vp.width * 0.5f;
+    float y = vp.height * 0.5f;
+    
+    ofPushStyle();
+    ofSetLineWidth(3);
+    ofSetColor(255, 255, 0);
+    ofNoFill();
+    glDepthMask(false);
+    ofCircle(x, y, r);
+    glDepthMask(true);
+    ofPopStyle();
+}
+
 //--------------------------------------------------------------
 void ofApp::createGUI(){
     cursor.loadImage("GUI/cursor_baton.png");
-    GUIFirstCirclePosition = ofPoint( ofGetWidth() / ( 2 * machines.size() ) , ofGetHeight() / 2);
-    GUICircleSpacing = 2 * GUIFirstCirclePosition.x;
-    GUICircleRadius = ( GUICircleSpacing- .1 * GUICircleSpacing ) / 2;
 }
 //--------------------------------------------------------------
-void ofApp::drawGUI(){
+void ofApp::drawGUI(ofPoint theGUIFirstCirclePosition ,int theGUICircleRadius,
+                    int theGUICircleSpacing){
+    GUICircleRadius = theGUICircleRadius;
+    GUICircleSpacing = theGUICircleSpacing;
+    GUIFirstCirclePosition = theGUIFirstCirclePosition;
     ofColor colorOn = ofColor( 200 , 200 , 40 );
     ofColor colorOff = ofColor( 50 , 20 , 70 );
     ofPoint firstCirclePosition;
@@ -130,7 +308,7 @@ void ofApp::drawEqualizer( int x , int y , int w , int h ){
         ofSetColor(ofMap(fftSmoothed[i] , 0 , 1 , 0 , 255 ),ofMap(fftSmoothed[i] , 0 , 1 , 255 , 0 ),0,255);
         ofFill();
         ofRect( x + i * width , y + h , width ,-(fftSmoothed[i] * h));
-         ofNoFill();
+        ofNoFill();
         ofSetColor( 200 , 200 , 200 );
         ofRect( x + i * width , y + h , width , - h);
     }
@@ -140,6 +318,23 @@ void ofApp::keyPressed  (int key){
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+    switch(key) {
+        case 'C':
+        case 'c':
+            if(cam.getMouseInputEnabled()) cam.disableMouseInput();
+            else cam.enableMouseInput();
+            break;
+            
+        case 'F':
+        case 'f':
+            ofToggleFullscreen();
+            break;
+        case 'H':
+        case 'h':
+            bShowHelp ^=true;
+            break;
+    }
+    
 }
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
@@ -189,7 +384,7 @@ void ofApp::createMachines(){
     newMachineViola->addState( "VIOLA_01"       , "sounds/soundsJo_03/Luz_Viola_Part_01.mp3" , 0 );
     newMachineViola->addState( "VIOLA_02"       , "sounds/soundsJo_03/Luz_Viola_Part_02.mp3" , 0 );
     newMachineViola->addState( "VIOLA_03"       , "sounds/soundsJo_03/Luz_Viola_Part_03.mp3" , 0 );
-
+    
     newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_SILENCE"   , 0.2 );
     newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_01"        , 0.4 );
     newMachineViola->addTransition("VIOLA_SILENCE"  , "VIOLA_02"        , 0.3 );
@@ -209,7 +404,7 @@ void ofApp::createMachines(){
     newMachineViola->addTransition("VIOLA_03"       , "VIOLA_01"        , 0.1 );
     newMachineViola->addTransition("VIOLA_03"       , "VIOLA_02"        , 0.5 );
     newMachineViola->addTransition("VIOLA_03"       , "VIOLA_03"        , 0.1 );
-
+    
     //machine Violin 01
     newMachineViolin01->addState( "VIOLIN_#1_SILENCE" , "sounds/soundsJo_03/Luz_Violin_01_Part_Silence.wav" , 0 );
     newMachineViolin01->addState( "VIOLIN_#1_01" , "sounds/soundsJo_03/Luz_Violin_01_Part_01.mp3" , 0 );
@@ -324,7 +519,7 @@ void ofApp::createMachines(){
     newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_02" , 0.2 );
     newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_03" , 0.2 );
     newMachineViolin03->addTransition("VIOLIN_#3_SILENCE" , "VIOLIN_#3_04" , 0.1 );
-
+    
     newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_SILENCE" , 0.1 );
     newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_01" , 0.2 );
     newMachineViolin03->addTransition("VIOLIN_#3_01" , "VIOLIN_#3_02" , 0.4 );
@@ -413,14 +608,14 @@ void ofApp::createMachines(){
     newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_04" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_05" , 0.1 );
     newMachineViolonchelo->addTransition("VIOLONCHELO_06" , "VIOLONCHELO_06" , 0.1 );
-
+    
     newMachinePiano->save( "machines/MachinesJo_02/MachinePiano.mmf");
     newMachineViola->save( "machines/MachinesJo_02/MachineViola.mmf");
     newMachineViolin01->save( "machines/MachinesJo_02/MachineViolin01.mmf");
     newMachineViolin02->save( "machines/MachinesJo_02/MachineViolin02.mmf");
     newMachineViolin03->save( "machines/MachinesJo_02/MachineViolin03.mmf");
     newMachineViolonchelo->save( "machines/MachinesJo_02/MachineViolonchelo.mmf");
-
+    
     machines.push_back( newMachinePiano         );
     machines.push_back( newMachineViola         );
     machines.push_back( newMachineViolin01      );
@@ -713,10 +908,10 @@ void ofApp::createMachinesTest(){
     newMachineG->save( "machines/MachineG.mmf");
     
     machines.push_back( newMachineA );
-//    machines.push_back( newMachineB );
-//    machines.push_back( newMachineC );
-//    machines.push_back( newMachineD );
-//    machines.push_back( newMachineE );
-//    machines.push_back( newMachineF );
-//    machines.push_back( newMachineG );
+    //    machines.push_back( newMachineB );
+    //    machines.push_back( newMachineC );
+    //    machines.push_back( newMachineD );
+    //    machines.push_back( newMachineE );
+    //    machines.push_back( newMachineF );
+    //    machines.push_back( newMachineG );
 }

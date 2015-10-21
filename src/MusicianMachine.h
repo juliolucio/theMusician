@@ -24,6 +24,7 @@ private:
     ifstream* fileIn;
     string name;
     bool isItActive;
+    bool hasJustChangedState;
     void clear();
     
 public:
@@ -34,7 +35,7 @@ public:
 
     bool load( string fileName );
     bool save( string fileName );
-    string update();
+    void update();
     void start();
     void stop();
     void draw();
@@ -42,6 +43,7 @@ public:
     string getCurrentStateName();
     void setActive( bool ifIsItActive );
     bool isAtcive();
+    bool justChangedState();
     
 
 };
