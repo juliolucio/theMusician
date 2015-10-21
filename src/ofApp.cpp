@@ -147,6 +147,7 @@ void ofApp::draw(){
     ofPopMatrix();
     */
     
+    
     material.begin();
     
     if(1) texture.getTextureReference().bind();
@@ -160,6 +161,23 @@ void ofApp::draw(){
             ofPopMatrix();
         }
     }
+    
+    ofSetColor( 20 , 200 , 20 );
+    ofVec3f timerPositionCenter = ofVec3f( -300 , 300 , 0 ) ;
+    ofDrawSphere( timerPositionCenter , 20 );
+    for( int e = 0 ; e <= 8 ; e ++ ){
+        ofSetColor( 180 , 200 , 220 );
+        if( e == 0 )
+            ofSetColor( 180 , 20 , 10 );
+        float angle = e * ( ( 2 * PI ) / 8.8f );
+        ofVec3f timerPositionGAuge = ofVec3f( 35 * cosf( angle ) , 35 * sinf( angle )  , 0 ) ;
+        ofDrawSphere( timerPositionCenter + timerPositionGAuge , 4 );
+    }
+    ofSetColor( 2280 , 20 , 20 );
+    float angle = ofMap( machines[0]->getCurrentStatePercentaje() , 0 , 1 , 0 , 2 * PI );
+    ofVec3f timerPositionGAuge = ofVec3f( 35 * cosf( angle ) , 35 * sinf( angle )  , 0 ) ;
+    ofDrawSphere( timerPositionCenter + timerPositionGAuge , 7 );
+    ofSetColor(255);
     
     if(1) texture.getTextureReference().unbind();
     if(0) vidGrabber.getTextureReference().unbind();
@@ -182,7 +200,7 @@ void ofApp::draw(){
     ofFill();
     cam.end();
     
-    drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , ( ofGetHeight() / 5 )  , equalizerSize.x , equalizerSize.y );
+    drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , ofGetHeight() - ( ofGetHeight() / 6 )  , equalizerSize.x , equalizerSize.y );
     drawGUI( ofPoint( 165 , 600 ) , 30 , 135 );
     //drawInteractionArea();
 //    ofSetColor(255);

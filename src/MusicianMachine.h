@@ -41,6 +41,7 @@ public:
     void draw();
     string getName();
     string getCurrentStateName();
+    float getCurrentStatePercentaje();
     void setActive( bool ifIsItActive );
     bool isAtcive();
     bool justChangedState();

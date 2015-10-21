@@ -260,6 +260,10 @@ string MusicianMachine::getCurrentStateName(){
     return currentState->getName();
 }
 //-----------------------------------------------------------
+float MusicianMachine::getCurrentStatePercentaje(){
+    return currentState->sound.getPosition();
+}
+//-----------------------------------------------------------
 void MusicianMachine::setActive( bool ifIsItActive ){
     isItActive = ifIsItActive;
 }

@@ -20,6 +20,7 @@ private:
     vector<string> statesNames;
     vector<string> transitionStateNameInitial;
     vector<string> transitionStateNameFinal;
+    vector<float> transitionStateProbabilities;
 
     int stateCurrent;
     int statePrevious;
