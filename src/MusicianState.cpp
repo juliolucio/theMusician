@@ -59,6 +59,7 @@ bool MusicianState::load(std::ifstream* fileIn ){
     }
     sound.stop();
     sound.setLoop(false);
+    sound.setMultiPlay(true);
     return true;
 }
 //-----------------------------------------------------------

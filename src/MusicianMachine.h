@@ -35,7 +35,7 @@ public:
 
     bool load( string fileName );
     bool save( string fileName );
-    void update();
+    void updateStates();
     void start();
     void stop();
     void draw();
@@ -45,6 +45,7 @@ public:
     void setActive( bool ifIsItActive );
     bool isAtcive();
     bool justChangedState();
+    bool justFinishidState();
     
 
 };

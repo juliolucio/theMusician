@@ -9,9 +9,10 @@ void ofApp::setup(){
     ofDisableArbTex();
     texture.loadImage("of.png");
     texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
-       if( 0 ) {
-    vidGrabber.initGrabber(640, 480, true);
-       }
+    
+    if( 1 )
+        vidGrabber.initGrabber(640, 480, true);
+    
     
     ofSetSmoothLighting(true);
     pointLight.setDiffuseColor( ofFloatColor(.85, .85, .55) );
@@ -82,13 +83,14 @@ void ofApp::update(){
     ofBackground(127,127,127);
     updateEqualizer();
     
+    if( machines[0]->justFinishidState() )
+        for( int m = 0 ; m < machines.size() ; m++)
+            if(machines[m])
+                machines[m]->updateStates();
     
-    for( int m = 0 ; m < machines.size() ; m++)
-        if(machines[m])
-            machines[m]->update();
-    for( int m = 0 ; m < machinesControllers.size() ; m++)
-        if(machinesControllers[m])
-            machinesControllers[m]->update();
+    for( int mc = 0 ; mc < machinesControllers.size() ; mc++)
+        if(machinesControllers[mc])
+            machinesControllers[mc]->update();
     
     pointLight.setPosition((ofGetWidth()*.5)+ cos(ofGetElapsedTimef()*.5)*(ofGetWidth()*.3), ofGetHeight()/2, 500);
     pointLight2.setPosition((ofGetWidth()*.5)+ cos(ofGetElapsedTimef()*.15)*(ofGetWidth()*.3),
@@ -101,9 +103,9 @@ void ofApp::update(){
                             );
     
     //ofSetWindowTitle("Framerate: "+ofToString(ofGetFrameRate(), 0));
-    if( 0 ) {
+    if( 1 )
         vidGrabber.update();
-    }
+    
     
 }
 //--------------------------------------------------------------
@@ -150,8 +152,8 @@ void ofApp::draw(){
     
     material.begin();
     
-    if(1) texture.getTextureReference().bind();
-    if(0) vidGrabber.getTextureReference().bind();
+    if(0) texture.getTextureReference().bind();
+    if(1) vidGrabber.getTextureReference().bind();
     
     for( int m = 0 ; m < machinesControllers.size() ; m++){
         if(machinesControllers[m]){
@@ -179,8 +181,8 @@ void ofApp::draw(){
     ofDrawSphere( timerPositionCenter + timerPositionGAuge , 7 );
     ofSetColor(255);
     
-    if(1) texture.getTextureReference().unbind();
-    if(0) vidGrabber.getTextureReference().unbind();
+    if(0) texture.getTextureReference().unbind();
+    if(1) vidGrabber.getTextureReference().unbind();
     
     material.end();
     ofDisableLighting();
