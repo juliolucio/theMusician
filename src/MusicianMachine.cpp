@@ -77,6 +77,8 @@ void MusicianMachine::updateStates(){
     }
     
     if( !posibleTransitions.size() )
+        //currentState->sound.stop();
+        currentState->sound.setPosition(0);
         currentState->sound.play();
     
     //        if( totalProbability != 1.0f ){
@@ -94,8 +96,10 @@ void MusicianMachine::updateStates(){
         valuerReached += tempPosibleTransition.first;
         if( valuerReached > dice ){
             cout << "Machine : " << name << "  form " << currentState->getName();
+            //currentState->sound.stop();
             currentState = tempPosibleTransition.second->getStateFinal();
             cout << " to " << currentState->getName() << "\n";
+            currentState->sound.setPosition(0);
             currentState->sound.play();
             hasJustChangedState = true;
             if( isAtcive() )
