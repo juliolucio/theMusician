@@ -89,7 +89,7 @@ void ofApp::update(){
     
     if( machines[0]->justFinishidState() )
         for( int m = 0 ; m < machines.size() ; m++)
-            if(machines[m])
+            if(machines[m] && machines[m]->isAtcive() )
                 machines[m]->updateStates();
     
     for( int mc = 0 ; mc < machinesControllers.size() ; mc++)
