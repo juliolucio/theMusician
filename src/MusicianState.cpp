@@ -18,7 +18,7 @@ MusicianState::MusicianState( string theStatetNane , string theSoundFileName , f
     }
     name = theStatetNane;
     soundFileName = theSoundFileName;
-    param01 = param01Value;
+    energy = param01Value;
     sound.stop();
     sound.setLoop(false);
     sound.setMultiPlay(true);
@@ -50,7 +50,7 @@ bool MusicianState::load(std::ifstream* fileIn ){
         cout << "* Musician  State load: Bad tag param01\n";
         return false;
     }
-    (*fileIn) >> param01;
+    (*fileIn) >> energy;
     
     if( !sound.loadSound( soundFileName ) ){
         cout << "Failed to load sound file ";
@@ -73,7 +73,7 @@ bool MusicianState::save(std::ofstream* fileOut ){
     (*fileOut) << "\n";
     
     (*fileOut) << "param01= ";
-    (*fileOut) << param01;
+    (*fileOut) << energy;
     (*fileOut) << "\n";
     
     return  true;

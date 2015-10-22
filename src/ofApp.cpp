@@ -7,10 +7,11 @@ void ofApp::setup(){
     
     // GL_REPEAT for texture wrap only works with NON-ARB textures //
     ofDisableArbTex();
-    texture.loadImage("of.png");
+    texture.loadImage("GUI/earth.png");
+    texture.rotate90(2);
     texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
     
-    if( 1 )
+    if( 0 )
         vidGrabber.initGrabber(640, 480, true);
     
     
@@ -24,13 +25,16 @@ void ofApp::setup(){
     pointLight3.setDiffuseColor( ofFloatColor(19.f/255.f,94.f/255.f,77.f/255.f) );
     pointLight3.setSpecularColor( ofFloatColor(18.f/255.f,150.f/255.f,135.f/255.f) );
     
+    pointLightTime.setDiffuseColor(ofFloatColor(.85, .85, .55) );
+    pointLightTime.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
+    
     // shininess is a value between 0 - 128, 128 being the most shiny //
     material.setShininess( 120 );
     // the light highlight of the material //
     material.setSpecularColor(ofColor(255, 255, 255, 255));
     
     // this sets the camera's distance from the object
-    cam.setDistance(1000);
+    cam.setDistance(1200);
     
     ofSetCircleResolution(64);
     ofSetSphereResolution(24);
@@ -103,7 +107,7 @@ void ofApp::update(){
                             );
     
     //ofSetWindowTitle("Framerate: "+ofToString(ofGetFrameRate(), 0));
-    if( 1 )
+    if( 0 )
         vidGrabber.update();
     
     
@@ -115,119 +119,110 @@ void ofApp::draw(){
     ofPoint equalizerSize = ofPoint( 400 , 70 );
     cam.begin();
     
-    
     ofEnableDepthTest();
     
     ofEnableLighting();
-    pointLight.enable();
+    //pointLight.enable();
     pointLight2.enable();
     pointLight3.enable();
-    
+    pointLightTime.enable();
     
     //ofRotateX(ofRadToDeg(.5));
     //ofRotateY(ofRadToDeg(-.5));
     
-    
     ofBackground(127);
     /*
-    ofSetColor(255,0,0);
-    // ofFill();
-    //ofDrawBox(30);
-    ofNoFill();
-    //ofSetColor(0);
-    ofDrawBox(30);
+     ofSetColor(255,0,0);
+     // ofFill();
+     //ofDrawBox(30);
+     ofNoFill();
+     //ofSetColor(0);
+     ofDrawBox(30);
+     
+     ofPushMatrix();
+     ofTranslate(0,0,20);
+     ofSetColor(0,0,255);
+     //ofFill();
+     //ofDrawBox(5);
+     ofNoFill();
+     //ofSetColor(0);
+     ofDrawBox(5);
+     ofSetColor(255);
+     ofPopMatrix();
+     */
     
-    ofPushMatrix();
-    ofTranslate(0,0,20);
-    ofSetColor(0,0,255);
-    //ofFill();
-    //ofDrawBox(5);
-    ofNoFill();
-    //ofSetColor(0);
-    ofDrawBox(5);
-    ofSetColor(255);
-    ofPopMatrix();
-    */
-    
-    
-    material.begin();
-    
-    if(0) texture.getTextureReference().bind();
-    if(1) vidGrabber.getTextureReference().bind();
-    
+    //drawing the views
     for( int m = 0 ; m < machinesControllers.size() ; m++){
         if(machinesControllers[m]){
             ofPushMatrix();
-            ofTranslate( (m * 200) - 520 , -200 );
+            ofTranslate( (m * 310) - 820 , -500 );
             machinesControllers[m]->drawView();
             ofPopMatrix();
         }
     }
     
-    ofSetColor( 20 , 200 , 20 );
-    ofVec3f timerPositionCenter = ofVec3f( -300 , 300 , 0 ) ;
-    ofDrawSphere( timerPositionCenter , 20 );
+    material.begin();
+    if(1) texture.getTextureReference().bind();
+    if(0) vidGrabber.getTextureReference().bind();
+    
+    ofSetColor( 255 );
+    ofVec3f timerPositionCenter = ofVec3f( 0 , 320 , 0 ) ;
+    int centerRadius = 100;
+    int satelitesRadius = centerRadius / 8;
+    int satelitesDistance = 1.2 * centerRadius;
+    ofDrawSphere( timerPositionCenter , centerRadius );
+    
+    if(1) texture.getTextureReference().unbind();
+    if(0) vidGrabber.getTextureReference().unbind();
+    material.end();
+   
     for( int e = 0 ; e <= 8 ; e ++ ){
-        ofSetColor( 180 , 200 , 220 );
+        ofSetColor( 20 , 60 , 10 );
         if( e == 0 )
-            ofSetColor( 180 , 20 , 10 );
-        float angle = e * ( ( 2 * PI ) / 8.8f );
-        ofVec3f timerPositionGAuge = ofVec3f( 35 * cosf( angle ) , 35 * sinf( angle )  , 0 ) ;
-        ofDrawSphere( timerPositionCenter + timerPositionGAuge , 4 );
+            ofSetColor( 180 , 60 , 60 );
+        float angle = e * ( ( 2 * PI ) / 8.8f ) + PI / 2;
+        ofVec3f timerPositionGAuge = ofVec3f( satelitesDistance * cosf( angle ) , 0 , satelitesDistance * sinf( angle )  ) ;
+        ofDrawSphere( timerPositionCenter + timerPositionGAuge , satelitesRadius );
     }
-    ofSetColor( 2280 , 20 , 20 );
-    float angle = ofMap( machines[0]->getCurrentStatePercentaje() , 0 , 1 , 0 , 2 * PI );
-    ofVec3f timerPositionGAuge = ofVec3f( 35 * cosf( angle ) , 35 * sinf( angle )  , 0 ) ;
-    ofDrawSphere( timerPositionCenter + timerPositionGAuge , 7 );
+    ofSetColor( 180 , 200 , 220 );
+    float angle = ofMap( machines[0]->getCurrentStatePercentaje() , 0 , 1 , 0 , 2 * PI ) + PI / 2;
+    ofVec3f timerPositionGAuge = ofVec3f( satelitesDistance * cosf( angle ) , 0 , satelitesDistance * sinf( angle )  ) ;
+    pointLightTime.setPosition( timerPositionCenter + 100 * timerPositionGAuge );
+    ofDrawSphere( timerPositionCenter + timerPositionGAuge , satelitesRadius );
     ofSetColor(255);
     
-    if(0) texture.getTextureReference().unbind();
-    if(1) vidGrabber.getTextureReference().unbind();
+
     
-    material.end();
-    ofDisableLighting();
+       ofDisableLighting();
     
     
-//    ofFill();
-////    ofSetColor(pointLight.getDiffuseColor());
-//    pointLight.draw();
-//    ofSetColor(pointLight2.getDiffuseColor());
-//    pointLight2.draw();
-//    ofSetColor(pointLight3.getDiffuseColor());
-//    pointLight3.draw();
+    //    ofFill();
+    //    ofSetColor(pointLight.getDiffuseColor());
+    //    pointLight.draw();
+    //    ofSetColor(pointLight2.getDiffuseColor());
+    //    pointLight2.draw();
+    //    ofSetColor(pointLightTime.getDiffuseColor());
+    //    pointLightTime.draw();
     
-    
+//    string msg = "\n\nLEFT MOUSE BUTTON DRAG:\nStart dragging INSIDE the yellow circle -> camera XY rotation .\nStart dragging OUTSIDE the yellow circle -> camera Z rotation (roll).\n\n";
+//    msg += "LEFT MOUSE BUTTON DRAG + TRANSLATION KEY (" + ofToString(cam.getTranslationKey()) + ") PRESSED\n";
+//    msg += "OR MIDDLE MOUSE BUTTON (if available):\n";
+//    msg += "move over XY axes (truck and boom).\n\n";
+//    msg += "RIGHT MOUSE BUTTON:\n";
+//    msg += "move over Z axis (dolly)";
+//    ofDrawBitmapString(msg, timerPositionCenter );
+//    
     ofDisableDepthTest();
     
     ofFill();
     cam.end();
     
-    drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , ofGetHeight() - ( ofGetHeight() / 6 )  , equalizerSize.x , equalizerSize.y );
-    drawGUI( ofPoint( 165 , 600 ) , 30 , 135 );
+    //drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , ofGetHeight() - ( ofGetHeight() / 6 )  , equalizerSize.x , equalizerSize.y );
+    drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , 20  , equalizerSize.x , equalizerSize.y );
+    drawGUI( ofPoint( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) + 20, 130 ) , 20 , 66 );
     //drawInteractionArea();
-//    ofSetColor(255);
-//    string msg = string("Using mouse inputs to navigate (press 'c' to toggle): ") + (cam.getMouseInputEnabled() ? "YES" : "NO");
-//    msg += string("\nShowing help (press 'h' to toggle): ")+ (bShowHelp ? "YES" : "NO");
-//    if (bShowHelp) {
-//        msg += "\n\nLEFT MOUSE BUTTON DRAG:\nStart dragging INSIDE the yellow circle -> camera XY rotation .\nStart dragging OUTSIDE the yellow circle -> camera Z rotation (roll).\n\n";
-//        msg += "LEFT MOUSE BUTTON DRAG + TRANSLATION KEY (" + ofToString(cam.getTranslationKey()) + ") PRESSED\n";
-//        msg += "OR MIDDLE MOUSE BUTTON (if available):\n";
-//        msg += "move over XY axes (truck and boom).\n\n";
-//        msg += "RIGHT MOUSE BUTTON:\n";
-//        msg += "move over Z axis (dolly)";
-//    }
-//    msg += "\n\nfps: " + ofToString(ofGetFrameRate(), 2);
-//    ofDrawBitmapStringHighlight(msg, 10, 20);
     
-    
-    //       ofSetColor(0);
-    //    ofRect(icoSphere.getPosition().x-154, icoSphere.getPosition().y + 120, 168, 24);
-    //    ofSetColor(255);
-    //    ofDrawBitmapString("ofIcoSpherePrimitive", icoSphere.getPosition().x-150, icoSphere.getPosition().y+136 );
     drawGUIMouse();
-    
-    
-    
 }
 //--------------------------------------------------------------
 void ofApp::drawInteractionArea(){
@@ -256,8 +251,8 @@ void ofApp::drawGUI(ofPoint theGUIFirstCirclePosition ,int theGUICircleRadius,
     GUICircleRadius = theGUICircleRadius;
     GUICircleSpacing = theGUICircleSpacing;
     GUIFirstCirclePosition = theGUIFirstCirclePosition;
-    ofColor colorOn = ofColor( 200 , 200 , 40 );
-    ofColor colorOff = ofColor( 50 , 20 , 70 );
+    ofColor colorOn = ofColor( 120 , 200 , 120 );
+    ofColor colorOff = ofColor( 60 , 100 , 60 );
     ofPoint firstCirclePosition;
     for( int m = 0 ; m < machines.size() ; m ++ ){
         if( machines[m]->isAtcive() )
@@ -267,13 +262,13 @@ void ofApp::drawGUI(ofPoint theGUIFirstCirclePosition ,int theGUICircleRadius,
         ofFill();
         ofCircle( GUIFirstCirclePosition.x + GUICircleSpacing * m , GUIFirstCirclePosition.y , GUICircleRadius );
         ofSetColor( colorOff );
-        ofDrawBitmapString( machines[m]->getName(),
-                           GUIFirstCirclePosition.x + GUICircleSpacing * m - GUICircleRadius / 2 ,
-                           GUIFirstCirclePosition.y  -  GUICircleRadius / 5 );
+        //ofDrawBitmapString( machines[m]->getName(),
+        //                   GUIFirstCirclePosition.x + GUICircleSpacing * m - GUICircleRadius / 2 ,
+        //                   GUIFirstCirclePosition.y  -  GUICircleRadius / 5 );
         
-        ofDrawBitmapString( machines[m]->getCurrentStateName(),
-                           GUIFirstCirclePosition.x + GUICircleSpacing * m - GUICircleRadius / 2,
-                           GUIFirstCirclePosition.y  + GUICircleRadius / 5 );
+        //ofDrawBitmapString( machines[m]->getCurrentStateName(),
+        //                   GUIFirstCirclePosition.x + GUICircleSpacing * m - GUICircleRadius / 2,
+        //                   GUIFirstCirclePosition.y  + GUICircleRadius / 5 );
         ofNoFill();
         ofCircle( GUIFirstCirclePosition.x + GUICircleSpacing * m , GUIFirstCirclePosition.y , GUICircleRadius );
         ofCircle( GUIFirstCirclePosition.x + GUICircleSpacing * m , GUIFirstCirclePosition.y , GUICircleRadius * .9 );

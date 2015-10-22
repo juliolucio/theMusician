@@ -18,6 +18,7 @@ private:
     map<int,ofCylinderPrimitive*> transitions;
     
     vector<string> statesNames;
+    vector<float> statesEnergy;
     vector<string> transitionStateNameInitial;
     vector<string> transitionStateNameFinal;
     vector<float> transitionStateProbabilities;
@@ -36,6 +37,10 @@ private:
     void clear();
     int getStateIndex( string name );
     vector<ofMeshFace> triangles;
+    
+    ofImage texture;
+    ofMaterial material;
+
     
 public:
     MusicianMachineView( string theName );

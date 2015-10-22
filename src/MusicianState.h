@@ -16,7 +16,7 @@ class MusicianState{
 private:
     string name;
     string soundFileName;
-    float param01;
+    float energy;
 
 public:
     ofSoundPlayer sound;

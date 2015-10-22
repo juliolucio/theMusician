@@ -53,6 +53,7 @@ public:
     ofLight pointLight;
     ofLight pointLight2;
     ofLight pointLight3;
+     ofLight pointLightTime;
     void drawInteractionArea();
     bool bShowHelp;
     ofEasyCam cam;

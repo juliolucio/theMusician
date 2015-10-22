@@ -22,7 +22,11 @@ MusicianMachineView::MusicianMachineView( string theName ){
     fileIn = 0;
     fileOut = 0;
     isItActive = true;
-
+    
+    ofDisableArbTex();
+    //texture.loadImage("GUI/earth.png");
+    //texture.rotate90(2);
+    //texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
 }
 //-------------------------------------------------------------
 MusicianMachineView::~MusicianMachineView(){
@@ -39,6 +43,7 @@ bool MusicianMachineView::addState( string theName , float theParam01 ){
     newSphere->setResolution(4);
     states.insert(pair<int,ofIcoSpherePrimitive*>(states.size(),newSphere));
     statesNames.push_back( theName );
+    statesEnergy.push_back(theParam01);
     if( stateCurrent == -1 )
         stateCurrent = 0;
     return true;
@@ -67,25 +72,23 @@ void MusicianMachineView::draw(){
     int stateIndex = 0;
     while( it != states.end() ){
         ofIcoSpherePrimitive* tempSphere = (*it).second;
-
         if( stateCurrent  == stateIndex || statePrevious  == stateIndex ){
             float amplitude;
             float liquidness = 2;
             float speedDampen = 5;
             
-            if(stateCurrent  == stateIndex ){
-                amplitude = 30;
-                liquidness = 2;
-                speedDampen = 5;
+            if( stateCurrent  == stateIndex && stateCurrent != 0 ){
+                amplitude = 20;
+                liquidness = 1;
+                speedDampen = 1;
                 ofSetColor(30);
             }
-            else if(statePrevious  == stateIndex ){
+            else {
                 amplitude = 10;
                 liquidness = 2;
                 speedDampen = 5;
                 ofSetColor(100);
             }
-            
             
             ofVboMesh mesh = tempSphere->getMesh();
             vector<ofVec3f>& verts = mesh.getVertices();
@@ -97,13 +100,17 @@ void MusicianMachineView::draw(){
             ofPushMatrix();
             ofTranslate( tempSphere->getPosition() );
             
+            texture.getTextureReference().bind();
             mesh.drawFaces();
+            texture.getTextureReference().unbind();
+            
             ofSetColor(255);
             ofPopMatrix();
-
         }
         else{
+            texture.getTextureReference().bind();
             tempSphere->draw();
+            texture.getTextureReference().unbind();
         }
         it++;
         stateIndex++;
@@ -111,56 +118,69 @@ void MusicianMachineView::draw(){
     
     map<int,ofCylinderPrimitive*>::iterator itt = transitions.begin();
     int transitionIndex = 0;
+    int numTransitions = transitions.size();
     while( itt != transitions.end() ){
-//        ofCylinderPrimitive* tempCilinder = (*itt).second;
-//        if( stateCurrent  == getStateIndex( transitionStateNameFinal[transitionIndex] ) || statePrevious  == getStateIndex( transitionStateNameInitial[transitionIndex] ) ){
-//            float amplitude = 3;
-//            float liquidness = 2;
-//            float speedDampen = 5;
-//            ofVboMesh mesh = tempCilinder->getMesh();
-//            vector<ofVec3f>& verts = mesh.getVertices();
-//            for(unsigned int i = 0; i < verts.size(); i++){
-//                verts[i].x += ofSignedNoise(verts[i].x/liquidness, verts[i].y/liquidness,verts[i].z/liquidness, ofGetElapsedTimef()/speedDampen)*amplitude;
-//                verts[i].y += ofSignedNoise(verts[i].z/liquidness, verts[i].x/liquidness,verts[i].y/liquidness, ofGetElapsedTimef()/speedDampen)*amplitude;
-//                verts[i].z += ofSignedNoise(verts[i].y/liquidness, verts[i].z/liquidness,verts[i].x/liquidness, ofGetElapsedTimef()/speedDampen)*amplitude;
-//            }
-//            ofPushMatrix();
-//            ofTranslate( tempCilinder->getPosition() );
-//            //mesh.drawFaces();
-//            ofPopMatrix();
-//        }
-//        
-//        else
-//            tempCilinder->draw();
+        //        ofCylinderPrimitive* tempCilinder = (*itt).second;
+        //        if( stateCurrent  == getStateIndex( transitionStateNameFinal[transitionIndex] ) || statePrevious  == getStateIndex( transitionStateNameInitial[transitionIndex] ) ){
+        //            float amplitude = 3;
+        //            float liquidness = 2;
+        //            float speedDampen = 5;
+        //            ofVboMesh mesh = tempCilinder->getMesh();
+        //            vector<ofVec3f>& verts = mesh.getVertices();
+        //            for(unsigned int i = 0; i < verts.size(); i++){
+        //                verts[i].x += ofSignedNoise(verts[i].x/liquidness, verts[i].y/liquidness,verts[i].z/liquidness, ofGetElapsedTimef()/speedDampen)*amplitude;
+        //                verts[i].y += ofSignedNoise(verts[i].z/liquidness, verts[i].x/liquidness,verts[i].y/liquidness, ofGetElapsedTimef()/speedDampen)*amplitude;
+        //                verts[i].z += ofSignedNoise(verts[i].y/liquidness, verts[i].z/liquidness,verts[i].x/liquidness, ofGetElapsedTimef()/speedDampen)*amplitude;
+        //            }
+        //            ofPushMatrix();
+        //            ofTranslate( tempCilinder->getPosition() );
+        //            //mesh.drawFaces();
+        //            ofPopMatrix();
+        //        }
+        //
+        //        else
+        //            tempCilinder->draw();
         
-       
-        if( stateCurrent  == getStateIndex( transitionStateNameFinal[transitionIndex] ) && statePrevious  == getStateIndex( transitionStateNameInitial[transitionIndex] ) )
-            ofSetColor( 240 , 20 , 20  );
-        else
+        
+        
+        int indexStateInitial   = getStateIndex( transitionStateNameInitial[transitionIndex] );
+        int indexStateFinal     = getStateIndex( transitionStateNameFinal[transitionIndex] );
+        
+        int energyInitial = statesEnergy[ indexStateInitial ];
+        int energyFinal = statesEnergy[ indexStateFinal ];
+        
+        if( indexStateInitial != indexStateFinal ){
+            
+            ofVec3f statePositionInitial = states[ indexStateInitial    ]->getPosition();
+            ofVec3f statePositionFinal   = states[ indexStateFinal      ]->getPosition();
+            ofVec3f directionVector = statePositionFinal - statePositionInitial;
+            float legth = directionVector.length();
+            directionVector = directionVector.normalize();
+            
+            
+            ofVec3f miiddlePoint = statePositionInitial + directionVector * ( legth / 2.0f );
+            
+            if( energyFinal > energyInitial ){
+                miiddlePoint += ofVec3f( -3 , 0 , 0 ) * ( numTransitions - transitionIndex );
+                ofSetColor( ofMap( transitionStateProbabilities[ transitionIndex ] , 0 , 1 , 0 , 255 ) , 10 , 10  );
+            }
+            else{
+                miiddlePoint += ofVec3f( 3 , 0 , 0 ) * ( numTransitions - transitionIndex );
+                ofSetColor( 10 , 10 , ofMap( transitionStateProbabilities[ transitionIndex ] , 0 , 1 , 0 , 255 )  );
+            }
+            
+            if( stateCurrent  == indexStateFinal && statePrevious  == indexStateInitial )
+                ofSetColor( 10 , 200 , 10  );
+            
+            ofDisableLighting();
+            ofLine( statePositionInitial , miiddlePoint );
+            ofLine( miiddlePoint , statePositionFinal );
+            ofDrawBitmapString( ofToString( transitionStateProbabilities[ transitionIndex ]), miiddlePoint.x, miiddlePoint.y );
+            ofEnableLighting();
+            ofFill();
+            ofDrawSphere( miiddlePoint, ofMap( transitionStateProbabilities[ transitionIndex ] , 0 , 1 , 0 , 25 ));
             ofSetColor(255 );
-        
-        
-        ofVec3f initStatePosition = states[getStateIndex( transitionStateNameInitial[transitionIndex] ) ]->getPosition();
-        ofVec3f finalStatePosition = states[getStateIndex( transitionStateNameFinal[transitionIndex] ) ]->getPosition();
-        
-       
-        
-        ofLine(initStatePosition.x, initStatePosition.y, initStatePosition.z, finalStatePosition.x, finalStatePosition.y, finalStatePosition.z);
-        
-        ofVec3f directionVector = finalStatePosition - initStatePosition;
-        
-        float legth = directionVector.length();
-        directionVector = directionVector.normalize();
-        ofVec3f miiddlePoint = initStatePosition + directionVector * ( legth / 2.0f );
-        
-        ofFill();
-        ofSetColor(ofMap( transitionStateProbabilities[ transitionIndex ] , 0 , 1 , 0 , 255 ));
-        ofDrawSphere(miiddlePoint, ofMap( transitionStateProbabilities[ transitionIndex ] , 0 , 1 , 0 , 20 ));
-        //ofRect(miiddlePoint.x, miiddlePoint.y , 12, 15);
-        //ofSetColor(255);
-        //ofDrawBitmapString( ofToString( transitionStateProbabilities[ transitionIndex ]), miiddlePoint.x, miiddlePoint.y );
-        ofSetColor(255 );
-        
+        }
         itt++;
         transitionIndex++;
     }
