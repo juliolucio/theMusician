@@ -78,6 +78,7 @@ void ofApp::draw(){
     pointLightTime.enable();
     drawTimer( ofVec3f(0 , 320 , 0));
     composition.draw();
+    material.end();
     ofDisableLighting();
     
     drawInstructions();
@@ -101,7 +102,7 @@ void ofApp::draw(){
     }
     ofPopMatrix();
     
-    composition.drawGUI( ofVec3f(550 , 120 , 0 ) , 25 , 65 ) ;
+    composition.drawGUI( ofVec3f(600 , 55 , 0 ) , 10 , 45 ) ;
     
     //drawing mouse
     drawGUIMouse();
@@ -149,35 +150,38 @@ void ofApp::updateEqualizer(){
 }
 //--------------------------------------------------------------
 void ofApp::drawTimer( ofVec3f position){
-    texture.getTextureReference().bind();
-    //vidGrabber.getTextureReference().bind();
-    
     ofSetColor( 255 );
-    ofVec3f timerPositionCenter = ofVec3f( position ) ;
-    int centerRadius = 100;
-    int satelitesRadius = centerRadius / 8;
-    int satelitesDistance = 1.2 * centerRadius;
+    ofVec3f timerPositionCenter = ofVec3f( position );
+    int centerRadius = 40;
+    int satelitesRadiusBig = 15;
+    int satelitesRadiusSmall = 5;
+    int satelitesDistance = 400;
+    int numBigSteps = 8;
+    int numSmallSteps = 32;
+    
     ofFill();
     ofDrawSphere( timerPositionCenter , centerRadius );
     
-    texture.getTextureReference().unbind();
-    material.end();
-    
-    for( int e = 0 ; e <= 8 ; e ++ ){
-        ofSetColor( 20 , 60 , 10 );
-        if( e == 0 )
-            ofSetColor( 180 , 60 , 60 );
-        float angle = e * ( ( 2 * PI ) / 8.8f ) + PI / 2;
+    for( int e = 0 ; e < numBigSteps  ; e ++ ){
+        ofSetColor( 127 , 127 , 255 );
+        float angle = e * ( ( 2 * PI ) / float(numBigSteps) );
         ofVec3f timerPositionGAuge = ofVec3f( satelitesDistance * cosf( angle ) , 0 , satelitesDistance * sinf( angle )  ) ;
-        ofDrawSphere( timerPositionCenter + timerPositionGAuge , satelitesRadius );
+        ofDrawSphere( timerPositionCenter + timerPositionGAuge , satelitesRadiusBig );
     }
-    ofSetColor( 180 , 200 , 220 );
-    float angle = ofMap( composition.getPosition() , 0 , 1 , 0 , 2 * PI );
-    ofVec3f timerPositionGAuge = ofVec3f( satelitesDistance * cosf( angle ) , 0 , satelitesDistance * sinf( angle )  ) ;
-    pointLightTime.setPosition( timerPositionCenter + 100 * timerPositionGAuge );
-    ofDrawSphere( timerPositionCenter + timerPositionGAuge , satelitesRadius );
-    ofSetColor(255);
+    
+    for( int e = 0 ; e < numSmallSteps ; e ++ ){
+        ofSetColor( 100 , 100 , 200 );
+        float angle = e * ( ( 2 * PI ) / float(numSmallSteps) );
+        ofVec3f timerPositionGAuge = ofVec3f( satelitesDistance * cosf( angle ) , 0 , satelitesDistance * sinf( angle )  ) ;
+        ofDrawSphere( timerPositionCenter + timerPositionGAuge , satelitesRadiusSmall );
+    }
 
+    ofSetColor( 255 , 230 , 255 );
+    float angle = ofMap( composition.getPosition() , 0 , 1 , 0 , 2 * PI ) + PI / 2;
+    ofVec3f timerPositionGAuge = ofVec3f( satelitesDistance * cosf( angle ) , 0 , satelitesDistance * sinf( angle )  ) ;
+    ofDrawSphere( timerPositionCenter + timerPositionGAuge , satelitesRadiusSmall+ 5 );
+    pointLightTime.setPosition( timerPositionCenter + 100 * timerPositionGAuge );
+    ofSetColor(255);
 }
 //--------------------------------------------------------------
 void ofApp::drawInstructions(){
@@ -196,7 +200,7 @@ void ofApp::drawEqualizer( int x , int y , int w , int h ){
     for (int i = 0;i < nBandsToGet; i++){
         ofSetColor(ofMap(fftSmoothed[i] , 0 , 1 , 0 , 255 ),ofMap(fftSmoothed[i] , 0 , 1 , 255 , 0 ),0,255);
         ofFill();
-        ofRect( x + i * width , y + h , width ,-(fftSmoothed[i] * h));
+        ofRect( x + i * width , y + h , width ,-(fftSmoothed[i] * h * .5 ));
         ofNoFill();
         ofSetColor( 200 , 200 , 200 );
         ofRect( x + i * width , y + h , width , - h);
