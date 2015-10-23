@@ -16,6 +16,7 @@
 		891E53971BD99A7900E60448 /* MusicianMachineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 891E538F1BD99A7900E60448 /* MusicianMachineView.cpp */; };
 		891E53981BD99A7900E60448 /* MusicianState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 891E53911BD99A7900E60448 /* MusicianState.cpp */; };
 		891E53991BD99A7900E60448 /* MusicianTransition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 891E53931BD99A7900E60448 /* MusicianTransition.cpp */; };
+		89A0E0F81BDAE64300E3D1CF /* MusicianComposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89A0E0F61BDAE64300E3D1CF /* MusicianComposition.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A4DD23693DFAB8EC05FAA5D /* ofxCvShortImage.cpp */; };
 		E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A16CBF2E8CFE43AF54FE6F5 /* ofxCvHaarFinder.cpp */; };
@@ -120,6 +121,8 @@
 		891E53921BD99A7900E60448 /* MusicianState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicianState.h; sourceTree = "<group>"; };
 		891E53931BD99A7900E60448 /* MusicianTransition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicianTransition.cpp; sourceTree = "<group>"; };
 		891E53941BD99A7900E60448 /* MusicianTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicianTransition.h; sourceTree = "<group>"; };
+		89A0E0F61BDAE64300E3D1CF /* MusicianComposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MusicianComposition.cpp; sourceTree = "<group>"; };
+		89A0E0F71BDAE64300E3D1CF /* MusicianComposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicianComposition.h; sourceTree = "<group>"; };
 		8A4DD23693DFAB8EC05FAA5D /* ofxCvShortImage.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxCvShortImage.cpp; path = ../../../addons/ofxOpenCv/src/ofxCvShortImage.cpp; sourceTree = SOURCE_ROOT; };
 		8DB45DE3BD6BB97E34BDB411 /* nn_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = nn_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/nn_index.h; sourceTree = SOURCE_ROOT; };
 		8E79CF8911DFABAFE23EA45B /* ofxCvConstants.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvConstants.h; path = ../../../addons/ofxOpenCv/src/ofxCvConstants.h; sourceTree = SOURCE_ROOT; };
@@ -564,6 +567,8 @@
 				891E53921BD99A7900E60448 /* MusicianState.h */,
 				891E53931BD99A7900E60448 /* MusicianTransition.cpp */,
 				891E53941BD99A7900E60448 /* MusicianTransition.h */,
+				89A0E0F61BDAE64300E3D1CF /* MusicianComposition.cpp */,
+				89A0E0F71BDAE64300E3D1CF /* MusicianComposition.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -685,6 +690,7 @@
 				FB09C6B2A1DA0EA217240CB8 /* ofxCvGrayscaleImage.cpp in Sources */,
 				891E53981BD99A7900E60448 /* MusicianState.cpp in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
+				89A0E0F81BDAE64300E3D1CF /* MusicianComposition.cpp in Sources */,
 				63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */,
 				D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */,
 			);

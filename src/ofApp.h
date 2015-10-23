@@ -1,9 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "MusicianMachine.h"
-#include "MusicianMachineController.h"
-
+#include "MusicianComposition.h"
+#include "ofxCvHaarFinder.h"
 
 class ofApp : public ofBaseApp{
     
@@ -21,17 +20,11 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
-    
-    //GUI
-    ofPoint GUIFirstCirclePosition;
-    int GUICircleRadius;
-    int GUICircleSpacing;
+ 
+    //gui
     ofImage cursor;
-    void createGUI();
-    void drawGUI( ofPoint GUIFirstCirclePosition ,int GUICircleRadius,
-                 int GUICircleSpacing);
-    void mouseReleasedGUI( int x , int y , int buton );
     void drawGUIMouse();
+    bool bShowHelp;
     
     //equalizer
     float* fftSmoothed;
@@ -40,22 +33,30 @@ public:
     void updateEqualizer();
     void drawEqualizer( int x , int y , int w , int h );
     
-    //machines
-    std::vector<MusicianMachine*> machines;
-    std::vector<MusicianMachineController*> machinesControllers;
+    //istructions
+    void drawInstructions( );
     
-    void createMachines();
-    void createMachinesTest();
+    //timer
+    void drawTimer( ofVec3f position );
+
+    //camera
+    void drawInteractionArea();
+    ofEasyCam cam;
     
+    //texturing and lighting
     ofImage texture;
-    ofVideoGrabber vidGrabber;
     ofMaterial material;
     ofLight pointLight;
     ofLight pointLight2;
     ofLight pointLight3;
-     ofLight pointLightTime;
-    void drawInteractionArea();
-    bool bShowHelp;
-    ofEasyCam cam;
+    ofLight pointLightTime;
+    
+    //computer vision
+    ofVideoGrabber vidGrabber;
+    ofImage img;
+    ofxCvHaarFinder finder;
+    
+    //composition
+    MusicianComposition composition;
 };
 
