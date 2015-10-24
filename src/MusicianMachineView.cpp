@@ -36,7 +36,7 @@ MusicianMachineView::~MusicianMachineView(){
 bool MusicianMachineView::addState( string theName , float theParam01 ){
     ofIcoSpherePrimitive* newSphere = new ofIcoSpherePrimitive();
     newSphere->setRadius(radiusSphere);
-    float delta = ofRandom( -4 * radiusSphere ,  4 * radiusSphere );
+    float delta;// = ofRandom( -6 * radiusSphere ,  6 * radiusSphere );
     if( states.size() == 0 )
         delta = 0;
     newSphere->setPosition( delta , 6 * radiusSphere * theParam01 , 0 );
@@ -161,11 +161,11 @@ void MusicianMachineView::draw(){
             ofVec3f miiddlePoint = statePositionInitial + directionVector * ( legth / 2.0f );
             
             if( energyFinal > energyInitial ){
-                miiddlePoint += ofVec3f( -3 , 0 , 0 ) * ( numTransitions - transitionIndex );
+                miiddlePoint += ofVec3f( -4 , 0 , 0 ) * ( numTransitions - transitionIndex );
                 ofSetColor( ofMap( transitionStateProbabilities[ transitionIndex ] , 0 , 1 , 0 , 255 ) , 10 , 10  );
             }
             else{
-                miiddlePoint += ofVec3f( 3 , 0 , 0 ) * ( numTransitions - transitionIndex );
+                miiddlePoint += ofVec3f( 4 , 0 , 0 ) * ( numTransitions - transitionIndex );
                 ofSetColor( 10 , 10 , ofMap( transitionStateProbabilities[ transitionIndex ] , 0 , 1 , 0 , 255 )  );
             }
             

@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "MusicianComposition.h"
 #include "ofxCvHaarFinder.h"
+#include "HaarFinderThread.h"
 
 class ofApp : public ofBaseApp{
     
@@ -38,10 +39,11 @@ public:
     
     //timer
     void drawTimer( ofVec3f position );
-
+    void drawEnergy( ofVec3f position , int height , int radius);
+    
     //camera
     void drawInteractionArea();
-    ofEasyCam cam;
+    ofEasyCam* camera;
     
     //texturing and lighting
     ofImage texture;
@@ -50,13 +52,14 @@ public:
     ofLight pointLight2;
     ofLight pointLight3;
     ofLight pointLightTime;
-    
-    //computer vision
-    ofVideoGrabber vidGrabber;
-    ofImage img;
-    ofxCvHaarFinder finder;
-    
+
     //composition
     MusicianComposition composition;
+    
+    HaarFinderThread finder;
+    ofVideoGrabber vidGrabber;
+    ofImage* img;
+    float directorEnergy;
+
 };
 

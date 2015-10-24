@@ -5,7 +5,6 @@
 //  Created by Julio Lucio on 9/27/15.
 //
 //
-
 #ifndef MusicianMachine_h
 #define MusicianMachine_h
 
@@ -16,10 +15,11 @@ class MusicianTransition;
 
 class MusicianMachine{
 private:
-
     vector< MusicianState* > states;
     vector< MusicianTransition* > transitions;
     MusicianState* currentState;
+    MusicianState* nextState;
+    MusicianState*prevState;
     ofstream* fileOut;
     ifstream* fileIn;
     string name;
@@ -35,7 +35,7 @@ public:
 
     bool load( string fileName );
     bool save( string fileName );
-    void updateStates();
+    void updateStates( float theEnergy );
     void start();
     void stop();
     void draw();
@@ -46,6 +46,7 @@ public:
     bool isAtcive();
     bool justChangedState();
     bool justFinishidState();
+    void setCurrentState( MusicianState* newState );
     
 
 };

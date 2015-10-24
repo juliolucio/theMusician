@@ -23,6 +23,7 @@ public:
     MusicianState( );
     MusicianState( string name , string soundFileName , float param01Value );
     string getName();
+    float getEnergy();
     bool load( std::ifstream* fileIn );
     bool save( std::ofstream* fileIn );
     

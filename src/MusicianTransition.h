@@ -21,6 +21,7 @@ public:
     string getNameStateInitial();
     string getNameStateFinal();
     MusicianState* getStateFinal();
+    MusicianState* getStateInitial();
     float getProbability();
     bool save( std::ofstream* fileOut);
 };

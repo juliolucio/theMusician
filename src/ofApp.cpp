@@ -3,13 +3,15 @@
 void ofApp::setup(){
     ofSetVerticalSync(true);
     ofBackground(20);
+    ofSetSphereResolution(24);
     
-    //Textures materials and lighting
+    //Textures
     ofDisableArbTex();
     texture.loadImage("GUI/earth.png");
     texture.mirror(1,0);
     texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
     
+    //lights
     ofSetSmoothLighting(true);
     pointLight.setDiffuseColor( ofFloatColor(.85, .85, .55) );
     pointLight.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
@@ -23,20 +25,23 @@ void ofApp::setup(){
     pointLightTime.setDiffuseColor(ofFloatColor(.85, .85, .55) );
     pointLightTime.setSpecularColor( ofFloatColor(1.f, 1.f, 1.f));
     
+    //material
     material.setShininess( 120 );
     material.setSpecularColor(ofColor(255, 255, 255, 255));
     
-    // this sets the camera's distance from the object
-    cam.setDistance(1200);
+    //Camera
+    camera = new ofEasyCam();
+    camera->setDistance(1200);
     
-    ofSetSphereResolution(24);
-    
+    //gui
     createEqualizer();
     cursor.loadImage("GUI/cursor_baton.png");
-
+    
+    //computer vision
     vidGrabber.initGrabber(640, 480, true);
-    img.allocate( vidGrabber.width , vidGrabber.height, OF_IMAGE_COLOR );
-    finder.setup("cascades/HandCascade.xml");
+    img = new ofImage();
+    img->allocate( vidGrabber.width , vidGrabber.height, OF_IMAGE_COLOR );
+    finder.start();
 }
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -53,14 +58,25 @@ void ofApp::update(){
                             cos(ofGetElapsedTimef()*.2) * ofGetWidth()
                             );
     
-    //ofSetWindowTitle("Framerate: "+ofToString(ofGetFrameRate(), 0));
+    int distanceToMiddleY = ofGetMouseY() - ( ofGetHeight() / 2);
+    directorEnergy -= ( 0.0001 * distanceToMiddleY );
+    if( directorEnergy > 1 )
+        directorEnergy = 1;
+    if( directorEnergy < 0 )
+        directorEnergy = 0;
+    
+    composition.update( directorEnergy );
     
     vidGrabber.update();
-    img.setFromPixels( vidGrabber.getPixels(), vidGrabber.width , vidGrabber.height , OF_IMAGE_COLOR);
-    img.update();
-    //finder.findHaarObjects(img);
-    
-    composition.update();
+    if( vidGrabber.isFrameNew() ){
+        unsigned char* pixels = 0;
+        pixels = vidGrabber.getPixels();
+        if( pixels ){
+            img->setFromPixels( pixels , vidGrabber.width , vidGrabber.height , OF_IMAGE_COLOR );
+            img->update();
+            finder.setImage( img );
+        }
+    }
 }
 //--------------------------------------------------------------
 void ofApp::draw(){
@@ -68,44 +84,49 @@ void ofApp::draw(){
     ofSetColor(255,255,255,255);
     ofBackground(127);
     
-    cam.begin();
+    camera->begin();
+    
     ofEnableDepthTest();
+    
     ofEnableLighting();
+    
     material.begin();
+    
     //pointLight.enable();
     pointLight2.enable();
     pointLight3.enable();
     pointLightTime.enable();
+    
     drawTimer( ofVec3f(0 , 320 , 0));
+    
     composition.draw();
+    
+    drawEnergy( ofVec3f( -700 , 300 , 0 ) , 400 , 20 );
+    
     material.end();
+    
     ofDisableLighting();
     
     drawInstructions();
-
+    
     ofDisableDepthTest();
+    
     ofFill();
-    cam.end();
+    
+    camera->end();
     
     //drawing equalizer
     ofPoint equalizerSize = ofPoint( 400 , 70 );
     drawEqualizer( ( ofGetWidth() / 2 ) - ( equalizerSize.x / 2 ) , 20  , equalizerSize.x , equalizerSize.y );
     
-    //drawing blobs
-    ofPushMatrix();
-    ofScale( .2 , .2 );
-    img.draw(100,100);
-    ofNoFill();
-    for(unsigned int i = 0; i < finder.blobs.size(); i++) {
-        ofRectangle cur = finder.blobs[i].boundingRect;
-        ofRect(cur.x, cur.y, cur.width, cur.height);
-    }
-    ofPopMatrix();
-    
     composition.drawGUI( ofVec3f(600 , 55 , 0 ) , 10 , 45 ) ;
+    
+    finder.draw();
     
     //drawing mouse
     drawGUIMouse();
+    
+   
 }
 //--------------------------------------------------------------
 void ofApp::drawInteractionArea(){
@@ -184,6 +205,27 @@ void ofApp::drawTimer( ofVec3f position){
     ofSetColor(255);
 }
 //--------------------------------------------------------------
+void ofApp::drawEnergy( ofVec3f position ,  int height  , int radius ){
+    ofSetColor( 255 );
+    ofVec3f timerPositionMax = ofVec3f( position );
+    ofVec3f timerPositionMin = ofVec3f( position ) - ofVec3f( 0 , height , 0);
+    int centerRadius = radius;
+    ofNoFill();
+    ofSetColor( 200 , 50 , 50 );
+    ofDrawSphere( timerPositionMax , 1.3 * centerRadius );
+    ofSetColor( 50 , 50 , 200 );
+    ofDrawSphere( timerPositionMin , 1.3 * centerRadius );
+    ofFill();
+    ofSetColor( ofMap( directorEnergy , 0 , 1 , 0 , 255 ) , 50 , ofMap(directorEnergy , 0 , 1 , 255 , 0 ) );
+    ofVec3f timerPositionMid = ofVec3f( timerPositionMin ) + ofVec3f(  0,directorEnergy * height,0);
+    ofDrawSphere( timerPositionMid , centerRadius );
+    ofLine( timerPositionMin , timerPositionMax);
+    string msg = "ENERGUY  = ";
+    msg += ofToString( directorEnergy );
+    ofDrawBitmapString( msg, timerPositionMid );
+    ofSetColor( 255 );
+}
+//--------------------------------------------------------------
 void ofApp::drawInstructions(){
     //    string msg = "\n\nLEFT MOUSE BUTTON DRAG:\nStart dragging INSIDE the yellow circle -> camera XY rotation .\nStart dragging OUTSIDE the yellow circle -> camera Z rotation (roll).\n\n";
     //    msg += "LEFT MOUSE BUTTON DRAG + TRANSLATION KEY (" + ofToString(cam.getTranslationKey()) + ") PRESSED\n";
@@ -214,8 +256,10 @@ void ofApp::keyReleased(int key){
     switch(key) {
         case 'C':
         case 'c':
-            if(cam.getMouseInputEnabled()) cam.disableMouseInput();
-            else cam.enableMouseInput();
+            if(camera->getMouseInputEnabled())
+                camera->disableMouseInput();
+            else
+                camera->enableMouseInput();
             break;
             
         case 'F':

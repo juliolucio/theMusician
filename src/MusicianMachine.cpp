@@ -61,55 +61,70 @@ bool MusicianMachine::addTransition( string nameState01 , string nameState02 , f
     return true;
 }
 //-------------------------------------------------------------
-void MusicianMachine::updateStates(){
+void MusicianMachine::updateStates( float theEnergy ){
     float dice = ofRandom( 0 , 1 );
     map<float,MusicianTransition*> posibleTransitions;
     map<float,MusicianTransition*>::iterator posibleTransitionsIterator;
-    float totalProbability = 0;
     for( int t = 0 ; t < transitions.size() ; t ++ ){
         if( transitions[t]->getNameStateInitial() == currentState->getName() ){
             pair<float,MusicianTransition*> newPosibleTransition;
-            newPosibleTransition.first = transitions[t]->getProbability();
-            newPosibleTransition.second = transitions[t];
-            posibleTransitions.insert(newPosibleTransition);
-            totalProbability += newPosibleTransition.first;
+            float energuiFinal = transitions[t]->getStateFinal()->getEnergy();
+            float energyInitial = transitions[t]->getStateInitial()->getEnergy();
+            
+            if( theEnergy > 0.65 ){
+                if( energuiFinal > energyInitial ){
+                    newPosibleTransition.first = transitions[t]->getProbability();
+                    newPosibleTransition.second = transitions[t];
+                    posibleTransitions.insert(newPosibleTransition);
+                }
+            }
+            
+            else if( theEnergy < 0.35 ){
+                if( energuiFinal < energyInitial ){
+                    newPosibleTransition.first = transitions[t]->getProbability();
+                    newPosibleTransition.second = transitions[t];
+                    posibleTransitions.insert(newPosibleTransition);
+                }
+            }
+            else{
+                newPosibleTransition.first = transitions[t]->getProbability();
+                newPosibleTransition.second = transitions[t];
+                posibleTransitions.insert(newPosibleTransition);
+            }
         }
     }
     
-    if( !posibleTransitions.size() )
-        //currentState->sound.stop();
-        currentState->sound.setPosition(0);
+    if( !posibleTransitions.size() ){
         currentState->sound.play();
+    }
     
-    //        if( totalProbability != 1.0f ){
-    //            for(posibleTransitionsIterator = posibleTransitions.begin() ;
-    //                posibleTransitionsIterator != posibleTransitions.end() ;
-    //                posibleTransitionsIterator ++ ){
-    //                pair<float,MusicianTransition*> tempPosibleTransition = (*posibleTransitionsIterator);
-    //                tempPosibleTransition.first /= totalProbability;
-    //            }
-    //        }
-    
-    float valuerReached = 0;
-    for(posibleTransitionsIterator = posibleTransitions.begin() ; posibleTransitionsIterator != posibleTransitions.end() ;posibleTransitionsIterator ++ ){
-        pair<float,MusicianTransition*> tempPosibleTransition = (*posibleTransitionsIterator);
-        valuerReached += tempPosibleTransition.first;
-        if( valuerReached > dice ){
-            cout << "Machine : " << name << "  form " << currentState->getName();
-            //currentState->sound.stop();
-            currentState = tempPosibleTransition.second->getStateFinal();
-            cout << " to " << currentState->getName() << "\n";
-            currentState->sound.setPosition(0);
-            currentState->sound.play();
-            hasJustChangedState = true;
-            if( isAtcive() )
-                currentState->sound.setVolume(1);
-            else
-                currentState->sound.setVolume(0);
+    else{
+        //normalizing probabilities
+        float total = 0;
+        for( posibleTransitionsIterator = posibleTransitions.begin() ; posibleTransitionsIterator != posibleTransitions.end() ;posibleTransitionsIterator ++ ){
+            pair<float,MusicianTransition*> tempPosibleTransition = (*posibleTransitionsIterator);
+            total += tempPosibleTransition.first;
+        }
+        
+        for( posibleTransitionsIterator = posibleTransitions.begin() ; posibleTransitionsIterator != posibleTransitions.end() ;posibleTransitionsIterator ++ ){
+            pair<float,MusicianTransition*> tempPosibleTransition = (*posibleTransitionsIterator);
+            tempPosibleTransition.first /= total;
+        }
+        float valuerReached = 0;
+        for(posibleTransitionsIterator = posibleTransitions.begin() ; posibleTransitionsIterator != posibleTransitions.end() ;posibleTransitionsIterator ++ ){
+            pair<float,MusicianTransition*> tempPosibleTransition = (*posibleTransitionsIterator);
+            valuerReached += tempPosibleTransition.first;
+            if( valuerReached >= dice ){
+                setCurrentState( tempPosibleTransition.second->getStateFinal() );
+                return;
+            }
+        }
+        if( posibleTransitions.size() ){
+            posibleTransitionsIterator--;
+            setCurrentState( (*posibleTransitionsIterator).second->getStateFinal() );
             return;
         }
     }
-    
 }
 //-------------------------------------------------------------
 void MusicianMachine::start(){
@@ -144,7 +159,7 @@ bool MusicianMachine::load( string fileName ){
         fileIn->close();
         return false;
     }
-
+    
     std::string junk;
     int numStates;
     int numTransitions;
@@ -164,7 +179,7 @@ bool MusicianMachine::load( string fileName ){
         return false;
     }
     (*fileIn) >> numTransitions;
-
+    
     clear();
     
     for( int s = 0 ; s < numStates ; s ++ ){
@@ -284,4 +299,16 @@ bool MusicianMachine::justChangedState(){
 //-----------------------------------------------------------
 bool MusicianMachine::justFinishidState(){
     return !currentState->sound.getIsPlaying();
+}
+//-----------------------------------------------------------
+void MusicianMachine::setCurrentState( MusicianState* newState ){
+    cout << "Machine : " << name << "  form " << currentState->getName();
+    currentState = newState;
+    cout << " to " << currentState->getName() << "\n";
+    currentState->sound.play();
+    hasJustChangedState = true;
+    if( isAtcive() )
+        currentState->sound.setVolume(1);
+    else
+        currentState->sound.setVolume(0);
 }

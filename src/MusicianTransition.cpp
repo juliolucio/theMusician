@@ -26,6 +26,10 @@ MusicianState* MusicianTransition::getStateFinal(){
     return stateFinal;
 }
 //----------------------------------------------------------
+MusicianState* MusicianTransition::getStateInitial(){
+    return stateInitial;
+}
+//----------------------------------------------------------
 float MusicianTransition::getProbability(){
     return probability;
 }

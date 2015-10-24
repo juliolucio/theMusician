@@ -1,3 +1,10 @@
+//
+//  MusicianComposition.h
+//  theMusiciam
+//
+//  Created by Julio Lucio on 10/24/15.
+//
+//
 #pragma once
 
 #include "ofMain.h"
@@ -10,8 +17,8 @@ public:
     MusicianComposition();
     ~MusicianComposition();
     
-    void setup();
-    void update();
+    void setup( ofEasyCam* theCamera );
+    void update( float theEnergy );
     void draw();
     
     void keyPressed  (int key);
@@ -39,8 +46,11 @@ public:
     //machines
     std::vector<MusicianMachine*> machines;
     std::vector<MusicianMachineController*> machinesControllers;
+    float energy;
     
     void createMachines();
     void createMachinesTest();
+    
+    ofEasyCam* camera;
 };
 

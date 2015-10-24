@@ -28,6 +28,10 @@ string MusicianState::getName(){
     return name;
 }
 //----------------------------------------------------------------------------------
+float MusicianState::getEnergy(){
+    return energy;
+}
+//----------------------------------------------------------------------------------
 bool MusicianState::load(std::ifstream* fileIn ){
     std::string junk;
     

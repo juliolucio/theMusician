@@ -1,6 +1,13 @@
+//
+//  MusicianComposition.cpp
+//  theMusiciam
+//
+//  Created by Julio Lucio on 10/24/15.
+//
+//
 #include "MusicianComposition.h"
 //--------------------------------------------------------------
-MusicianComposition::MusicianComposition(){
+MusicianComposition::MusicianComposition(  ){
     ofSetCircleResolution(64);
     
     MusicianMachine* newMachinePiano = new MusicianMachine( "PIANO" );
@@ -44,18 +51,19 @@ MusicianComposition::MusicianComposition(){
 }
 //--------------------------------------------------------------
 MusicianComposition::~MusicianComposition(){
-    
+
 }
 //--------------------------------------------------------------
-void MusicianComposition::setup(){
-   }
+void MusicianComposition::setup(ofEasyCam* theCamera){
+    camera = theCamera;
+}
 //--------------------------------------------------------------
-void MusicianComposition::update(){
-    
+void MusicianComposition::update( float theEnergy ){
+    energy = theEnergy;
     if( machines[0]->justFinishidState() )
         for( int m = 0 ; m < machines.size() ; m++)
             if(machines[m] && machines[m]->isAtcive() )
-                machines[m]->updateStates();
+                machines[m]->updateStates(theEnergy);
     
     for( int mc = 0 ; mc < machinesControllers.size() ; mc++)
         if(machinesControllers[mc])
