@@ -18,6 +18,7 @@ MusicianMachine::MusicianMachine( string theName ){
     fileOut = 0;
     isItActive = true;
     hasJustChangedState = false;
+    volume = 1;
 }
 //-------------------------------------------------------------
 MusicianMachine::~MusicianMachine(){
@@ -125,6 +126,11 @@ void MusicianMachine::updateStates( float theEnergy ){
             return;
         }
     }
+}
+
+//-------------------------------------------------------------
+void MusicianMachine::setVolume( float theVolume ){
+    currentState->sound.setVolume( theVolume );
 }
 //-------------------------------------------------------------
 void MusicianMachine::start(){
@@ -308,7 +314,7 @@ void MusicianMachine::setCurrentState( MusicianState* newState ){
     currentState->sound.play();
     hasJustChangedState = true;
     if( isAtcive() )
-        currentState->sound.setVolume(1);
+        currentState->sound.setVolume(volume);
     else
         currentState->sound.setVolume(0);
 }

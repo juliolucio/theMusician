@@ -40,8 +40,10 @@ void ofApp::setup(){
     //computer vision
     vidGrabber.initGrabber(640, 480, true);
     img = new ofImage();
-    img->allocate( vidGrabber.width , vidGrabber.height, OF_IMAGE_COLOR );
+    img->allocate( vidGrabber.getWidth() , vidGrabber.getHeight(), OF_IMAGE_COLOR );
     finder.start();
+    
+    volume = .6;
 }
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -59,20 +61,22 @@ void ofApp::update(){
                             );
     
     int distanceToMiddleY = ofGetMouseY() - ( ofGetHeight() / 2);
-    directorEnergy -= ( 0.0001 * distanceToMiddleY );
-    if( directorEnergy > 1 )
-        directorEnergy = 1;
-    if( directorEnergy < 0 )
-        directorEnergy = 0;
-    
-    composition.update( directorEnergy );
+    if( abs(distanceToMiddleY) > ( ofGetHeight() / 3)){
+        directorEnergy -= ( 0.00002 * distanceToMiddleY );
+        if( directorEnergy > 1 )
+            directorEnergy = 1;
+        if( directorEnergy < 0 )
+            directorEnergy = 0;
+    }
+
+    composition.update( directorEnergy , volume );
     
     vidGrabber.update();
     if( vidGrabber.isFrameNew() ){
         unsigned char* pixels = 0;
         pixels = vidGrabber.getPixels();
         if( pixels ){
-            img->setFromPixels( pixels , vidGrabber.width , vidGrabber.height , OF_IMAGE_COLOR );
+            img->setFromPixels( pixels , vidGrabber.getWidth() , vidGrabber.getHeight() , OF_IMAGE_COLOR );
             img->update();
             finder.setImage( img );
         }
@@ -102,6 +106,7 @@ void ofApp::draw(){
     composition.draw();
     
     drawEnergy( ofVec3f( -700 , 300 , 0 ) , 400 , 20 );
+    drawVolumen( ofVec3f( -800 , 300 , 0 ) , 400 , 10 );
     
     material.end();
     
@@ -225,6 +230,28 @@ void ofApp::drawEnergy( ofVec3f position ,  int height  , int radius ){
     ofDrawBitmapString( msg, timerPositionMid );
     ofSetColor( 255 );
 }
+
+//--------------------------------------------------------------
+void ofApp::drawVolumen( ofVec3f position ,  int height  , int radius ){
+    ofSetColor( 255 );
+    ofVec3f timerPositionMax = ofVec3f( position );
+    ofVec3f timerPositionMin = ofVec3f( position ) - ofVec3f( 0 , height , 0);
+    int centerRadius = radius;
+    ofNoFill();
+    ofSetColor( 200 , 50 , 50 );
+    ofDrawSphere( timerPositionMax , 1.3 * centerRadius );
+    ofSetColor( 50 , 200 , 20 );
+    ofDrawSphere( timerPositionMin , 1.3 * centerRadius );
+    ofFill();
+    ofSetColor( ofMap( volume , 0 , 1 , 0 , 255 ) , ofMap(volume , 0 , 1 , 255 , 0 ) , 50 );
+    ofVec3f timerPositionMid = ofVec3f( timerPositionMin ) + ofVec3f(  0,volume * height,0);
+    ofDrawSphere( timerPositionMid , centerRadius );
+    ofLine( timerPositionMin , timerPositionMax);
+    string msg = "Vol  = ";
+    msg += ofToString( volume );
+    ofDrawBitmapString( msg, timerPositionMid );
+    ofSetColor( 255 );
+}
 //--------------------------------------------------------------
 void ofApp::drawInstructions(){
     //    string msg = "\n\nLEFT MOUSE BUTTON DRAG:\nStart dragging INSIDE the yellow circle -> camera XY rotation .\nStart dragging OUTSIDE the yellow circle -> camera Z rotation (roll).\n\n";
@@ -266,9 +293,24 @@ void ofApp::keyReleased(int key){
         case 'f':
             ofToggleFullscreen();
             break;
+            
         case 'H':
         case 'h':
             bShowHelp ^=true;
+            break;
+            
+        case '+':
+        case '=':
+            volume += 0.05;
+            if( volume > 2 )
+                volume = 2;
+            break;
+            
+        case '-':
+        case '_':
+            volume -= .05;
+            if( volume < 0 )
+                volume = 0;
             break;
     }
     

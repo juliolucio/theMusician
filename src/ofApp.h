@@ -40,6 +40,7 @@ public:
     //timer
     void drawTimer( ofVec3f position );
     void drawEnergy( ofVec3f position , int height , int radius);
+    void drawVolumen( ofVec3f position , int height , int radius);
     
     //camera
     void drawInteractionArea();
@@ -60,6 +61,7 @@ public:
     ofVideoGrabber vidGrabber;
     ofImage* img;
     float directorEnergy;
+    float volume;
 
 };
 

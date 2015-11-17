@@ -18,7 +18,7 @@ public:
     ~MusicianComposition();
     
     void setup( ofEasyCam* theCamera );
-    void update( float theEnergy );
+    void update( float theEnergy , float theVolume  );
     void draw();
     
     void keyPressed  (int key);

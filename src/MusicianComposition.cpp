@@ -58,7 +58,7 @@ void MusicianComposition::setup(ofEasyCam* theCamera){
     camera = theCamera;
 }
 //--------------------------------------------------------------
-void MusicianComposition::update( float theEnergy ){
+void MusicianComposition::update( float theEnergy , float theVolume ){
     energy = theEnergy;
     if( machines[0]->justFinishidState() )
         for( int m = 0 ; m < machines.size() ; m++)

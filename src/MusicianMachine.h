@@ -25,6 +25,7 @@ private:
     string name;
     bool isItActive;
     bool hasJustChangedState;
+    float volume;
     void clear();
     
 public:
@@ -35,7 +36,8 @@ public:
 
     bool load( string fileName );
     bool save( string fileName );
-    void updateStates( float theEnergy );
+    void updateStates( float theEnergy);
+    void setVolume(float theVolume );
     void start();
     void stop();
     void draw();
