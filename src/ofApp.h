@@ -47,7 +47,7 @@ public:
     ofEasyCam* camera;
     
     //texturing and lighting
-    ofImage texture;
+    //ofImage texture;
     ofMaterial material;
     ofLight pointLight;
     ofLight pointLight2;

@@ -6,10 +6,10 @@ void ofApp::setup(){
     ofSetSphereResolution(24);
     
     //Textures
-    ofDisableArbTex();
+    //ofDisableArbTex();
     //texture.loadImage("GUI/earth.png");
     //texture.mirror(1,0);
-    texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
+    //texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
     
     //lights
     ofSetSmoothLighting(true);
@@ -130,8 +130,6 @@ void ofApp::draw(){
     
     //drawing mouse
     drawGUIMouse();
-    
-   
 }
 //--------------------------------------------------------------
 void ofApp::drawInteractionArea(){

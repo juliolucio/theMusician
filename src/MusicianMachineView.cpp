@@ -24,9 +24,9 @@ MusicianMachineView::MusicianMachineView( string theName ){
     isItActive = true;
     
     ofDisableArbTex();
-    texture.loadImage("GUI/earth.png");
-    texture.rotate90(2);
-    texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
+    //texture.loadImage("GUI/earth.png");
+    //texture.rotate90(2);
+    //texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
 }
 //-------------------------------------------------------------
 MusicianMachineView::~MusicianMachineView(){
@@ -100,17 +100,17 @@ void MusicianMachineView::draw(){
             ofPushMatrix();
             ofTranslate( tempSphere->getPosition() );
             
-            texture.getTextureReference().bind();
+            //texture.getTextureReference().bind();
             mesh.drawFaces();
-            texture.getTextureReference().unbind();
+            //texture.getTextureReference().unbind();
             
             ofSetColor(255);
             ofPopMatrix();
         }
         else{
-            texture.getTextureReference().bind();
+            //texture.getTextureReference().bind();
             tempSphere->draw();
-            texture.getTextureReference().unbind();
+            //texture.getTextureReference().unbind();
         }
         it++;
         stateIndex++;

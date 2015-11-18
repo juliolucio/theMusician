@@ -38,7 +38,7 @@ private:
     int getStateIndex( string name );
     vector<ofMeshFace> triangles;
     
-    ofImage texture;
+    //ofImage texture;
     ofMaterial material;
 
     
