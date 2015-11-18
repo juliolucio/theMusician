@@ -57,9 +57,9 @@ public:
     //composition
     MusicianComposition composition;
     
-    HaarFinderThread finder;
+    /*HaarFinderThread finder;
     ofVideoGrabber vidGrabber;
-    ofImage* img;
+    ofImage* img;*/
     float directorEnergy;
     float volume;
 

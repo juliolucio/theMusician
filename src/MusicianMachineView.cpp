@@ -24,9 +24,9 @@ MusicianMachineView::MusicianMachineView( string theName ){
     isItActive = true;
     
     ofDisableArbTex();
-    //texture.loadImage("GUI/earth.png");
-    //texture.rotate90(2);
-    //texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
+    texture.loadImage("GUI/earth.png");
+    texture.rotate90(2);
+    texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
 }
 //-------------------------------------------------------------
 MusicianMachineView::~MusicianMachineView(){

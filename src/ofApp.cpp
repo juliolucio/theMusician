@@ -7,8 +7,8 @@ void ofApp::setup(){
     
     //Textures
     ofDisableArbTex();
-    texture.loadImage("GUI/earth.png");
-    texture.mirror(1,0);
+    //texture.loadImage("GUI/earth.png");
+    //texture.mirror(1,0);
     texture.getTextureReference().setTextureWrap( GL_REPEAT, GL_REPEAT );
     
     //lights
@@ -38,10 +38,10 @@ void ofApp::setup(){
     cursor.loadImage("GUI/cursor_baton.png");
     
     //computer vision
-    vidGrabber.initGrabber(640, 480, true);
-    img = new ofImage();
-    img->allocate( vidGrabber.getWidth() , vidGrabber.getHeight(), OF_IMAGE_COLOR );
-    finder.start();
+    //vidGrabber.initGrabber(640, 480, true);
+    //img = new ofImage();
+    //img->allocate( vidGrabber.getWidth() , vidGrabber.getHeight(), OF_IMAGE_COLOR );
+    //finder.start();
     
     volume = .6;
 }
@@ -71,7 +71,7 @@ void ofApp::update(){
 
     composition.update( directorEnergy , volume );
     
-    vidGrabber.update();
+   /* vidGrabber.update();
     if( vidGrabber.isFrameNew() ){
         unsigned char* pixels = 0;
         pixels = vidGrabber.getPixels();
@@ -80,7 +80,7 @@ void ofApp::update(){
             img->update();
             finder.setImage( img );
         }
-    }
+    }*/
 }
 //--------------------------------------------------------------
 void ofApp::draw(){
@@ -126,7 +126,7 @@ void ofApp::draw(){
     
     composition.drawGUI( ofVec3f(600 , 55 , 0 ) , 10 , 45 ) ;
     
-    finder.draw();
+    //finder.draw();
     
     //drawing mouse
     drawGUIMouse();
